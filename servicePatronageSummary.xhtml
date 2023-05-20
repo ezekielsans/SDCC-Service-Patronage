@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:prcc="http://java.sun.com/jsf/composite/prcomponents"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface>
+        <composite:attribute name="summaryList"/>
+        <composite:attribute name="sc"/>
+        <composite:attribute name="sd"/>
+        <composite:attribute name="td"/>
+        <composite:attribute name="dm"/>
+        <composite:attribute name="ca"/>
+        <composite:attribute name="ot"/>
+        <composite:attribute name="op"/>
+        <composite:attribute name="ri"/>
+        <composite:attribute name="selection"/>
+        <composite:attribute name="summaryDataTable"/>
+        <composite:attribute name="ledgerDataTable"/>
+        <composite:attribute name="printPreviewDialogIndividualAccounts"/>
+        <composite:attribute name="printPreviewPanelIndividualAccounts"/>
+        <composite:attribute name="ledgerList"/>
+    </composite:interface>
+    <composite:implementation>
+        <p:panel id="orgDetails"
+                 style="border-color: white">
+            <div class="ui-grid-row">
+                <div class ="ui-grid-col-2">
+                    <p:outputLabel value ="Account no."/>
+                </div>
+                <div class ="ui-grid-col-10">
+                    <p:autoComplete id="acctno"
+                                    label="Account no."
+                                    value="#{organizationAccountInquiryOrgSupProfileData.orgSupProfile.orgName}"
+                                    completeMethod="#{organizationAccountInquiryAutoComplete.autoCompleteOrgName}"
+                                    forceSelection="true"
+                                    emptyMessage="no records found."
+                                    queryDelay="500"
+                                    scrollHeight="200"
+                                    maxResults="100"
+                                    inputStyle="width: 400px;"
+                                    onclick="this.select()">
+                        <p:ajax event="itemSelect"
+                                process="@this"
+                                update=":#{p:component('orgType')}, :#{p:component('orgAddress')}, :#{p:component('orgContact')}"
+                                listener="#{organizationAccountInquiryAutoComplete.completeOrgSupProfile()}" />
+                    </p:autoComplete>
+                </div>
+            </div>
+            <!--                        <div class ="ui-grid-col-2">
+                                        <p:outputLabel value ="TELLER: &nbsp;&nbsp;{portalData.approver.aprvrName}"
+                                                       style="font-weight: bold; text-align: right"/>
+                                    </div>-->
+            <div class="ui-grid-row">
+                <div class ="ui-grid-col-2">
+                    <h:outputLabel value ="Last Name: "/>
+                </div>
+                <div class ="ui-grid-col-5">
+                    <p:inputText id="orgType"
+                                 value="#{organizationAccountInquiryOrgSupProfileData.orgSupProfiles[organizationAccountInquiryOrgSupProfileData.index].orgType}"
+                                 label="Last Name"
+                                 readonly="true" >
+                    </p:inputText>
+                </div>
+            </div>
+
+            <div class="ui-grid-row">
+                <div class ="ui-grid-col-2">
+                    <h:outputLabel value ="First Name:"/>
+                </div>
+                <div class ="ui-grid-col-9">
+                    <p:inputText id="orgAddress"
+                                 value="#{organizationAccountInquiryOrgSupProfileData.orgSupProfiles[organizationAccountInquiryOrgSupProfileData.index].orgAddress}"
+                                 label="First Name:"
+                                 readonly="true" >
+                    </p:inputText>
+                </div>
+            </div>
+
+            <div class="ui-grid-row">
+                <div class ="ui-grid-col-2">
+                    <h:outputLabel value ="Birthdate: "/>
+                </div>
+                <div class ="ui-grid-col-9">
+                    <p:inputText id="orgContact"
+                                 value="#{organizationAccountInquiryOrgSupProfileData.orgSupProfiles[organizationAccountInquiryOrgSupProfileData.index].orgContact}"
+                                 label="Birthdate:"
+                                 readonly="true" >
+                    </p:inputText>
+                </div>
+
+
+
+            </div>
+        </p:panel>
+
+        <div class="ui-grid-row">
+            <p:commandButton value="Select"
+                             id="selectBtn"
+                             icon="ui-icon-check"
+                             style="margin-right: 7px"
+                             styleClass="ui-btn ui-shadow ui-corner-all"
+                             onstart="PF('statusDialogTrueWidgetVar').show()"
+                             onsuccess="PF('statusDialogTrueWidgetVar').hide()"
+                             actionListener="#{organizationAccountInquiryController.loadAllAccounts()}"
+                             update="">
+            </p:commandButton>
+            <p:commandButton value="Cancel"
+                                     icon="ui-icon-cancel"
+                                     styleClass="ui-btn ui-shadow ui-corner-all"
+                                     style="margin-right: 7px"
+                                     onclick="PF('exportDialog').hide()"/>
+            <p:commandButton value="Previous"
+                             id="prevBtn"
+                             icon="ui-icon-arrowthick-1-w"
+                             disabled="#{empty organizationAccountInquiryOrgSupProfileData.orgSupProfiles or organizationAccountInquiryOrgSupProfileData.orgSupProfiles.size() eq 0 or organizationAccountInquiryOrgSupProfileData.index eq 0}"
+                             style="margin-right: 7px"
+                             styleClass="ui-btn ui-shadow ui-corner-all" >
+                <p:ajax update=":#{p:component('orgDetails')}"
+                        listener="#{organizationAccountInquiryAutoComplete.completePreviousOrgSupProfile(organizationAccountInquiryOrgSupProfileData.index)}" />
+            </p:commandButton>
+            <p:commandButton value="Next"
+                             id="nextBtn"
+                             icon="ui-icon-arrowthick-1-e"
+                             iconPos="right"
+                             disabled="#{empty organizationAccountInquiryOrgSupProfileData.orgSupProfiles or organizationAccountInquiryOrgSupProfileData.orgSupProfiles.size() eq 0 or (organizationAccountInquiryOrgSupProfileData.index eq (organizationAccountInquiryOrgSupProfileData.orgSupProfiles.size() - 1))}"
+                             style="margin-right: 7px"
+                             styleClass="ui-btn ui-shadow ui-corner-all" >
+                <p:ajax update=":#{p:component('orgDetails')}" 
+                        listener="#{organizationAccountInquiryAutoComplete.completeNextOrgSupProfile(organizationAccountInquiryOrgSupProfileData.index)}" />
+            </p:commandButton>
+        </div>
+
+
+    </composite:implementation>
+</html>
