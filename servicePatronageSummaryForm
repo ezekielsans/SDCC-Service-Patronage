@@ -110,20 +110,20 @@
                                     </p:commandButton> 
                                 </div>
                                 <br/>
-                                <!--                                <p:panel id="dataView" style="border:white;">-->
-
-                                <p:dataTable id="servicePatronageFormTable"
-                                             rows="10"
-                                             paginator="true"
-                                             paginatorPosition="bottom"
-                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
-                                             {NextPageLink} {LastPageLink} {JumpToPageDropdown}">
-                                    <p:column headerText="Date"
-                                              style="width: 100%">
-                                    </p:column>
-                                    <p:column headerText="Service"
-                                              style="width: 1000%">
-                                    </p:column>
+                                <p:panel id="dataView" style="border:white;">
+                                    <p:dataTable id="servicePatronageFormTable"
+                                                 rows="10"
+                                                 paginator="true"
+                                                 paginatorPosition="bottom"
+                                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                                                 {NextPageLink} {LastPageLink} {JumpToPageDropdown}">
+                                        <p:column headerText="Date"
+                                                  style="width: 100%">
+                                        </p:column>
+                                        <p:column headerText="Service"
+                                                  style="width: 100%">
+                                        </p:column>
+                                    </p:dataTable>
                                     <br/>
                                     <div class="buttons ui-grid-row">
                                         <p:commandButton value="Exit"
@@ -131,8 +131,7 @@
                                                          style="margin-right: 7px">
                                         </p:commandButton> 
                                     </div>
-                                </p:dataTable>
-
+                                </p:panel>
                             </div>
                         </div>
                     </p:panel>  
