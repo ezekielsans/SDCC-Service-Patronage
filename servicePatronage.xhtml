@@ -39,52 +39,37 @@
 
                     <prcc:growl/>
 
+                    <!--
+                    <h:outputScript library="js"
+                                    name="FILE.js"/>
+                    -->
 
+                    <!--
+                    <h:outputStylesheet library="css" 
+                                        name="FILE.css"/>
+                    -->
 
-                    <p:panel id="indexPanel"
+                    <p:panel id="servicePatronagePanel"
                              style="border-color: white">
-
-                        <p:tabView id="accountsTabView"
-                                   widgetVar="accountsTabViewWidgetVar"
-                                   activeIndex="#{individualAccountsData.classAccount}">
-                            <p:ajax event="tabChange"
-                                    listener="#{individualAccountsController.changeTabClassAccount}"
-                                    update=":#{p:component('accountsTabView')}"/>
+                        <p:tabView id="servicePatronageTabView">
                             <p:tab title="Member">
-                                <prcc:servicesPatronageSummary summaryDataTable="opSummaryDataTable"
-                                                               summaryList="#{cc.attrs.memberOpSummaryList}"
-                                                               selection="#{individualAccountsData.memberOpSummary}"
-                                                               op="true"
-                                                               ledgerDataTable="opLedgerDataTable"/>
-                                <br/>
-                                <p:separator/>
+                                <prcc:servicePatronageMember
+                                    navigatePage="#{servicePatronageController.loadPage('servicePatronageSummaryForm')}"
+                                    />
                             </p:tab>
-                            <p:tab title="Group"
-                                   rendered="#{not individualAccountsData.filteredViewer}">
-                                <div class="ui-grid-row">
-                                    <prcc:servicesPatronageGroup summaryDataTable="opSummaryDataTable"
-                                                                 summaryList="#{cc.attrs.memberOpSummaryList}"
-                                                                 selection="#{individualAccountsData.memberOpSummary}"
-                                                                 op="true"
-                                                                 ledgerDataTable="opLedgerDataTable"/>
-                                    <br/>
-                                    <p:separator/>
-                                </div>
-                                <br/>
-                                <p:separator/>
+                              <p:tab title="Group">
+                                  <prcc:servicePatronageGroup
+                                    navigatePage="#{servicePatronageController.loadPage('servicePatronageSummaryForm')}"
+                                    />
                             </p:tab>
-                            <p:tab title="Non-Member"
-                                   rendered="#{not individualAccountsData.filteredViewer}">
-                                <prcc:servicesPatronageNonMember summaryDataTable="riSummaryDataTable"
-                                                                 summaryList="#{cc.attrs.memberRiSummaryList}"
-                                                                 selection="#{individualAccountsData.memberRiSummary}"
-                                                                 ri="true"
-                                                                 ledgerDataTable="riLedgerDataTable"/>
-
-                                <br/>
-                                <p:separator/>
+                              <p:tab title="Non-Member">
+                                  <prcc:servicePatronageNonMember
+                                    navigatePage="#{servicePatronageController.loadPage('servicePatronageSummaryForm')}"
+                                    />
                             </p:tab>
                         </p:tabView>
+
+
                     </p:panel>
                 </div>
             </h:form>  
