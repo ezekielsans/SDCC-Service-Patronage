@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:prcc="http://java.sun.com/jsf/composite/prcomponents"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface>
+        <composite:attribute name="navigatePage"
+                             method-signature="java.lang.String action()"/>
+        <!--<composite:attribute name="navigateToString"/>-->
+    </composite:interface>
+    <composite:implementation>
+        <p:panel id="memberTabView"
+                 style="border-color: white">
+            <div class="main ui-grid-row">
+                <div class="section ui-grid-col-6">
+                    <div class="group ui-grid-row">
+                        <div class="title ui-grid-col-2">
+                            <p:outputLabel value="Account no.:"/>
+                        </div>
+                        <p:autoComplete id="acctNo"
+                                        value="#{servicePatronageData.scAcctno}"
+                                        completeMethod="#{servicePatronageAutoCompleteForm.findByScAcctno}"
+                                        forceSelection="true"
+                                        emptyMessage="no records found."
+                                        queryDelay="500"
+                                        scrollHeight="200"
+                                        maxResults="100"
+                                        inputStyle="width:100px"
+                                        placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].scAcctno}"
+                                        onclick="this.select()">
+                            <p:ajax event="itemSelect"
+                                    process="@this"
+                                    update=":#{p:component('lastName')},:#{p:component('firstName')},:#{p:component('birthDate')}"/>
+                        </p:autoComplete>
+                    </div>
+                    <div class="group ui-grid-row">
+                        <div class="title ui-grid-col-2">
+                            <p:outputLabel value="Last name:"/>
+                        </div>
+                        <div class="textbox ui-grid-col-2">
+                            <p:autoComplete id="lastName"
+                                            scrollHeight="100">
+                            </p:autoComplete>
+                        </div>
+                    </div>
+                    <div class="group ui-grid-row">
+                        <div class="title ui-grid-col-2">
+                            <p:outputLabel value="First name:"/>
+                        </div>
+                        <p:autoComplete id="firstName"
+                                        scrollHeight="100">
+                        </p:autoComplete>
+                    </div>
+                    <div class="group ui-grid-row">
+
+                        <div class="title ui-grid-col-2">
+                            <p:outputLabel value="Birthdate:"/>
+                        </div>
+                        <p:autoComplete id="birthDate"
+                                        scrollHeight="100">
+                        </p:autoComplete>
+                    </div>
+                    <div class="separate ui-grid-row"></div>
+                    <br/>
+                    <div class="buttons ui-grid-row">
+                        <p:commandButton value="Select"
+                                         icon="ui-icon-check"
+                                         styleClass="ui-btn ui-shadow ui-corner-all"
+                                         style="margin-right: 7px"
+                                         actionListener="#{cc.attrs.navigatePage}"
+                                         update ="#{p:component('servicePatronageTabView')}">
+                        </p:commandButton> 
+                        <p:commandButton value="Cancel"
+                                         icon="ui-icon-cancel"
+                                         styleClass="ui-btn ui-shadow ui-corner-all"
+                                         style="margin-right: 7px">
+                        </p:commandButton> 
+                        <p:commandButton value="Previous"
+                                         icon="ui-icon-previous"
+                                         styleClass="ui-btn ui-shadow ui-corner-all"
+                                         style="margin-right: 7px">
+                        </p:commandButton> 
+                        <p:commandButton value="Next"
+                                         icon="ui-icon-next"
+                                         styleClass="ui-btn ui-shadow ui-corner-all"
+                                         style="margin-right: 7px">
+                        </p:commandButton> 
+                    </div>
+                </div>
+            </div>
+
+        </p:panel>
+    </composite:implementation>
+</html>
