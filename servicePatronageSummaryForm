@@ -36,8 +36,7 @@
                     <p:panel id="summaryForm"
                              style="border-color: white">
                         <div class="main ui-grid-row">
-                            <div class="section ui-grid-col-6">
-
+                            <div class="section ui-grid-col-12">
                                 <div class="account ui-grid-row">
                                     <div class="title ui-grid-col-2">
                                         <p:outputLabel value="Account no.:"/>
@@ -110,28 +109,29 @@
                                     </p:commandButton> 
                                 </div>
                                 <br/>
-                                <p:panel id="dataView" style="border:white;">
-                                    <p:dataTable id="servicePatronageFormTable"
-                                                 rows="10"
-                                                 paginator="true"
-                                                 paginatorPosition="bottom"
-                                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
-                                                 {NextPageLink} {LastPageLink} {JumpToPageDropdown}">
-                                        <p:column headerText="Date"
-                                                  style="width: 100%">
-                                        </p:column>
-                                        <p:column headerText="Service"
-                                                  style="width: 100%">
-                                        </p:column>
-                                    </p:dataTable>
-                                    <br/>
-                                    <div class="buttons ui-grid-row">
-                                        <p:commandButton value="Exit"
-                                                         styleClass="ui-btn ui-shadow ui-corner-all"
-                                                         style="margin-right: 7px">
-                                        </p:commandButton> 
-                                    </div>
-                                </p:panel>
+                                <p:dataTable id="servicePatronageFormTable"
+                                             scrollable="true"
+                                             scrollHeight="300"
+                                             rows="10"
+                                             paginator="true"
+                                             paginatorPosition="bottom"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                                             {NextPageLink} {LastPageLink} {JumpToPageDropdown}">
+                                    <p:column headerText="Date"
+                                              style="width: 100%">
+                                    </p:column>
+                                    <p:column headerText="Service"
+                                              style="width: 100%">
+                                    </p:column>
+                                </p:dataTable>
+                                <br/>
+                                <div class="buttons ui-grid-row">
+                                    <p:commandButton value="Exit"
+                                                     styleClass="ui-btn ui-shadow ui-corner-all"
+                                                     style="margin-right: 7px">
+                                    </p:commandButton> 
+                                </div>
+
                             </div>
                         </div>
                     </p:panel>  
