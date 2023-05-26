@@ -32,9 +32,8 @@ public class ServicePatronageAutoCompleteForm implements Serializable {
     private CustomEntityManagerFactory customEntityManagerFactory;
     @ManagedProperty(value = "#{servicePatronageData}")
     private ServicePatronageData servicePatronageData;
-    @ManagedProperty(value = "#{servicePatronageAutoCompleteForm}")
-    private ServicePatronageAutoCompleteForm servicePatronageAutoCompleteForm;
-
+    @ManagedProperty(value = "#{servePatronageAutoCompleteForm}")
+    private ServicePatronageAutoCompleteForm servePatronageAutoCompleteForm;
 
     /*
      * getter setter
@@ -55,24 +54,19 @@ public class ServicePatronageAutoCompleteForm implements Serializable {
         this.servicePatronageData = servicePatronageData;
     }
 
-    public ServicePatronageAutoCompleteForm getServicePatronageAutoCompleteForm() {
-        return servicePatronageAutoCompleteForm;
+    public ServicePatronageAutoCompleteForm getServePatronageAutoCompleteForm() {
+        return servePatronageAutoCompleteForm;
     }
 
-    public void setServicePatronageAutoCompleteForm(ServicePatronageAutoCompleteForm servicePatronageAutoCompleteForm) {
-        this.servicePatronageAutoCompleteForm = servicePatronageAutoCompleteForm;
+    public void setServePatronageAutoCompleteForm(ServicePatronageAutoCompleteForm servePatronageAutoCompleteForm) {
+        this.servePatronageAutoCompleteForm = servePatronageAutoCompleteForm;
     }
+
 
     /*
      * methods
      */
-//    public List<String> autoCompleteServicesPatronageFields(String scAcctno) {
-//        return getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(""
-//                + "SELECT a.scAcctno "
-//                + "FROM ServicePatronageView a ")
-//                .setParameter("scAcctno", scAcctno.concat("%"))
-//                .getResultList();
-//    }
+
     public List<String> findByScAcctno(String scAcctno) {
         return getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(""
                 + "SELECT DISTINCT (x.scAcctno) "
