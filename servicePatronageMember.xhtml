@@ -25,17 +25,19 @@
                         <p:autoComplete id="acctNo"
                                         value="#{servicePatronageData.scAcctno}"
                                         completeMethod="#{servicePatronageAutoCompleteForm.findByScAcctno}"
+                                        placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].scAcctno}"
                                         forceSelection="true"
-                                        emptyMessage="no records found."
                                         queryDelay="500"
                                         scrollHeight="200"
                                         maxResults="100"
-                                        inputStyle="width:100px"
-                                        placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].scAcctno}"
+                                        inputStyle="width:200px"
+                                        emptyMessage="no records found."
                                         onclick="this.select()">
+                            <p:ajax listener="#{servicePatronageAutoCompleteForm.findByScAcctno}"
+                                    process="@this"/>
                             <p:ajax event="itemSelect"
-                                    process="@this"
-                                    update=":#{p:component('lastName')},:#{p:component('firstName')},:#{p:component('birthDate')}"/>
+                                    update=":#{p:component('acctNo')},:#{p:component('lastName')},:#{p:component('firstName')},:#{p:component('birthDate')}"
+                                    process="@this"/>
                         </p:autoComplete>
                     </div>
                     <div class="group ui-grid-row">
@@ -44,16 +46,45 @@
                         </div>
                         <div class="textbox ui-grid-col-2">
                             <p:autoComplete id="lastName"
-                                            scrollHeight="100">
+                                            value="#{servicePatronageData.lastName}"
+                                            completeMethod="#{servicePatronageAutoCompleteForm.findByLastName}"
+                                            placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].lastName}"
+                                            queryDelay="500"
+                                            scrollHeight="200"
+                                            maxResults="100"
+                                            inputStyle="width:200px"
+                                            emptyMessage="no records found."
+                                            onclick="this.select()">
+                                <p:ajax listener="#{servicePatronageAutoCompleteForm.findByLastName}"
+                                        process="@this"/>
+                                <p:ajax event="itemSelect"
+                                        update=":#{p:component('acctNo')},:#{p:component('firstName')},:#{p:component('birthDate')}"
+                                        process="@this"/>
                             </p:autoComplete>
                         </div>
                     </div>
+
                     <div class="group ui-grid-row">
                         <div class="title ui-grid-col-2">
                             <p:outputLabel value="First name:"/>
                         </div>
                         <p:autoComplete id="firstName"
-                                        scrollHeight="100">
+                                        value="#{servicePatronageData.firstName}"
+                                        completeMethod="#{servicePatronageAutoCompleteForm.findByFirstName}"
+                                        placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].firstName}"
+                                        queryDelay="500"
+                                        scrollHeight="200"
+                                        maxResults="100"
+                                        inputStyle="width:200px"
+                                        emptyMessage="no records found."
+                                        onclick="this.select()">
+                            
+                            <p:ajax listener="#{servicePatronageAutoCompleteForm.findByFirstName}"
+                                    process="@this"/>
+                            <p:ajax event="itemSelect"
+                                        update=":#{p:component('lastName')},:#{p:component('acctNo')},:#{p:component('firstName')},:#{p:component('birthDate')}"
+                                        process="@this"/>
+                            
                         </p:autoComplete>
                     </div>
                     <div class="group ui-grid-row">
@@ -62,7 +93,8 @@
                             <p:outputLabel value="Birthdate:"/>
                         </div>
                         <p:autoComplete id="birthDate"
-                                        scrollHeight="100">
+                                        scrollHeight="100"
+                                        readonly="true">
                         </p:autoComplete>
                     </div>
                     <div class="separate ui-grid-row"></div>
