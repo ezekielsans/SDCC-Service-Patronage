@@ -32,12 +32,15 @@
                                         maxResults="100"
                                         inputStyle="width:200px"
                                         emptyMessage="no records found."
-                                        onclick="this.select()">
-                            <p:ajax listener="#{servicePatronageAutoCompleteForm.findByScAcctno}"
-                                    process="@this"/>
-                            <p:ajax event="itemSelect"
-                                    update=":#{p:component('acctNo')},:#{p:component('lastName')},:#{p:component('firstName')},:#{p:component('birthDate')}"
-                                    process="@this"/>
+                                        onclick="this.select()">                   
+                            <p:ajax  process="@this"
+                                     event="itemSelect"
+                                     update=":#{p:component('lastName')},:#{p:component('firstName')},:#{p:component('birthDate')}"
+                                     listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
+                            <p:ajax process="@this"
+                                    event="keyup"
+                                    update=":#{p:component('lastName')},:#{p:component('firstName')},:#{p:component('birthDate')}"
+                                    listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/> 
                         </p:autoComplete>
                     </div>
                     <div class="group ui-grid-row">
@@ -55,11 +58,14 @@
                                             inputStyle="width:200px"
                                             emptyMessage="no records found."
                                             onclick="this.select()">
-                                <p:ajax listener="#{servicePatronageAutoCompleteForm.findByLastName}"
-                                        process="@this"/>
-                                <p:ajax event="itemSelect"
+                                <p:ajax process="@this"
+                                        event="itemSelect"
                                         update=":#{p:component('acctNo')},:#{p:component('firstName')},:#{p:component('birthDate')}"
-                                        process="@this"/>
+                                        listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
+                                <p:ajax process="@this"
+                                        event="keyup"
+                                        update=":#{p:component('acctNo')},:#{p:component('firstName')},:#{p:component('birthDate')}"
+                                        listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
                             </p:autoComplete>
                         </div>
                     </div>
@@ -78,13 +84,15 @@
                                         inputStyle="width:200px"
                                         emptyMessage="no records found."
                                         onclick="this.select()">
-                            
-                            <p:ajax listener="#{servicePatronageAutoCompleteForm.findByFirstName}"
-                                    process="@this"/>
-                            <p:ajax event="itemSelect"
-                                        update=":#{p:component('lastName')},:#{p:component('acctNo')},:#{p:component('firstName')},:#{p:component('birthDate')}"
-                                        process="@this"/>
-                            
+                            <p:ajax process="@this"
+                                    event="itemSelect"
+                                    update=":#{p:component('lastName')},:#{p:component('acctNo')},:#{p:component('birthDate')}"
+                                    listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
+                            <p:ajax process="@this"
+                                    event="keyup"
+                                    update=":#{p:component('lastName')},:#{p:component('acctNo')},:#{p:component('birthDate')}"
+                                    listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
+
                         </p:autoComplete>
                     </div>
                     <div class="group ui-grid-row">
@@ -92,10 +100,11 @@
                         <div class="title ui-grid-col-2">
                             <p:outputLabel value="Birthdate:"/>
                         </div>
-                        <p:autoComplete id="birthDate"
-                                        scrollHeight="100"
-                                        readonly="true">
-                        </p:autoComplete>
+                        <p:inputText id="birthDate"
+                                     value="#{servicePatronageData.servicePatronageView[servicePatronageData.index].birthdate}"
+                                     readonly="true">
+                            <f:convertDateTime pattern="MMM dd yyyy"/>
+                        </p:inputText>
                     </div>
                     <div class="separate ui-grid-row"></div>
                     <br/>
