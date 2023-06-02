@@ -42,7 +42,14 @@
                                         <p:outputLabel value="Account no.:"/>
                                     </div>
                                     <div class="output ui-grid-row">
-                                        <h:outputText value="acct No."/>
+                                        <h:outputText id="acctNoTwo" 
+                                                      value="#{servicePatronageData.scAcctno}"
+                                                      />
+
+                                        <p:outputLabel value="-"
+                                                       rendered="#{empty servicePatronageData.scAcctno}"
+                                                       />
+
                                     </div>
                                 </div>
                                 <div class="nameGroup ui-grid-row">
@@ -50,7 +57,7 @@
                                         <p:outputLabel value="Name:"/>
                                     </div>
                                     <div class="output ui-grid-row">
-                                        <h:outputText value="Name"/>
+                                        <h:outputText  value="#{servicePatronageData.orgName}"/>
                                     </div>
                                 </div>
                                 <div class="typeGroup ui-grid-row">
@@ -58,7 +65,8 @@
                                         <p:outputLabel value="Type:"/>
                                     </div>
                                     <div class="output ui-grid-row">
-                                        <h:outputText value="Type"/>
+                                        <h:outputText id="outputType" 
+                                                      value="#{dataConvert.serviceTypeConvert(servicePatronageData.type)}"/>
                                     </div>
                                 </div>
 
@@ -68,12 +76,16 @@
                                     </div>
                                     <div class="calendar ui-grid-col-2"> 
                                         <p:calendar id="date"
+                                                    value="#{servicePatronageData.serviceDropdownDate}"
                                                     yearRange="#{1900}:#{customDate.currentDate}"
                                                     maxdate="#{customDate.currentDate}" 
                                                     pattern="MMM dd yyyy"
                                                     onclick="this.select()"
                                                     navigator="true"
                                                     readonlyInput="true">
+                                            <p:ajax event="dateSelect"
+                                                    update="@this ,:#{p:component('servicePatronageFormTable')}"
+                                                    process="@this"/>
                                         </p:calendar>
                                     </div>
                                 </div>
@@ -84,8 +96,16 @@
                                     </div>
                                     <div class="dropdown ui-grid-col-2">
                                         <p:selectOneMenu id="dropDown"
-                                                         value=""
+                                                         value="#{servicePatronageData.dropDown}"
                                                          style="width: 200px">
+                                            <p:ajax event="change"
+                                                    process="@this"/>
+                                            <f:selectItem itemLabel=""
+                                                          itemValue=""/>
+                                            <f:selectItems var="x"
+                                                           value="#{servicePatronageData.myServices}" 
+                                                           itemLabel="#{x.serviceName}"
+                                                           itemValue="#{x.serviceId}"/>
                                         </p:selectOneMenu>
                                     </div>
                                 </div>
@@ -99,17 +119,35 @@
                                         </p:autoComplete>
                                     </div>
                                 </div>
+
+                                <div class=" office ui-grid-row">
+                                    <div class="title ui-grid-col-2">
+                                        <p:outputLabel value="Office:"/>
+                                    </div>
+                                    <div class="textbox ui-grid-col-2">
+                                        <p:selectOneMenu id="officeDropDown"
+                                                         style="width: 200px">
+                                        </p:selectOneMenu>
+
+                                    </div>
+                                </div>
                                 <br/>
                                 <div class="addButtons ui-grid-row">
                                     <p:commandButton value="Add"
                                                      icon="ui-icon-plus"
                                                      styleClass="ui-btn ui-shadow ui-corner-all"
-                                                     style="margin-right: 7px"
-                                                     >
-                                    </p:commandButton> 
+                                                     style="margin-right: 7px">
+                                        <p:ajax process="@this" 
+                                                listener="#{servicePatronageController.addServiceDateToTable()}"
+                                                update=":#{p:component('servicePatronageFormTable')}, :#{p:component('summaryForm')}"/>
+                                    </p:commandButton>
+
+
                                 </div>
                                 <br/>
                                 <p:dataTable id="servicePatronageFormTable"
+                                             value="#{servicePatronageData.servicesType}"
+                                             var="collVar"
                                              scrollable="true"
                                              scrollHeight="300"
                                              rows="10"
@@ -119,9 +157,15 @@
                                              {NextPageLink} {LastPageLink} {JumpToPageDropdown}">
                                     <p:column headerText="Date"
                                               style="width: 100%">
+
+                                        <p:outputLabel value="#{servicePatronageData.serviceDropdownDate}">
+                                            <f:convertDateTime pattern="dd MMMM yyyy"/>
+                                        </p:outputLabel>
+
                                     </p:column>
                                     <p:column headerText="Service"
                                               style="width: 100%">
+                                        <p:outputLabel value="#{dataConvert.serviceTypeConvert(collVar[0])}"/>
                                     </p:column>
                                 </p:dataTable>
                                 <br/>
