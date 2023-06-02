@@ -32,19 +32,24 @@
                                         onclick="this.select()">
                             <p:ajax process="@this"
                                     event="itemSelect"
+                                    update="#{p:component('selectButton')}"
                                     />
                             <p:ajax event="keyup"
-                                    process="@this"/>
+                                    process="@this"
+                                    update="#{p:component('selectButton')}"/>
                         </p:autoComplete>
 
                     </div>
                     <br/>
                     <div class="buttons ui-grid-row">
-                        <p:commandButton value="Select"
-                                         icon="ui-icon-check"
-                                         styleClass="ui-btn ui-shadow ui-corner-all"
-                                         style="margin-right: 7px"
-                                         actionListener="#{cc.attrs.navigatePage}">
+                        <p:commandButton 
+                            id="selectButton"
+                            value="Select"
+                            icon="ui-icon-check"
+                            styleClass="ui-btn ui-shadow ui-corner-all"
+                            style="margin-right: 7px"
+                            actionListener="#{cc.attrs.navigatePage}"
+                            disabled="#{empty servicePatronageData.orgName}">
                         </p:commandButton> 
                     </div>
 
@@ -55,18 +60,24 @@
                     <br/>
                     <div class="group ui-grid-row">
                         <div class="title ui-grid-col-2">
-                            <p:outputLabel value="Group Name:"/>
+                            <p:outputLabel 
+                                value="Group Name:"/>
                         </div>
-                        <p:autoComplete id="groupNameSecond"
-                                        />
+                        <p:inputText id="groupNameSecond"
+                                     value="#{servicePatronageData.addNewGroup}">
+                            <p:ajax process="@this"
+                                    event="keyup"
+                                    update="#{p:component('addButton')}"/>
+                        </p:inputText>
                     </div>
                     <br/>
                     <div class="addbtn ui-grid-row">
-                        <p:commandButton value="Add"
+                        <p:commandButton id="addButton"
+                                         value="Add"
                                          icon="ui-icon-plus"
                                          styleClass="ui-btn ui-shadow ui-corner-all"
                                          style="margin-right: 7px"
-                                         >
+                                         disabled="#{empty servicePatronageData.addNewGroup}">
                         </p:commandButton> 
                     </div>
                 </div>
