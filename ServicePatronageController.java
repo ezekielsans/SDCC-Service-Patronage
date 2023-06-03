@@ -95,15 +95,16 @@ public class ServicePatronageController implements Serializable {
             facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Select Service.", ""));
         } else {
             System.out.println("dropdown: " + getServicePatronageData().getDropDown());
+            System.out.println("date" + getServicePatronageData().getServiceDropdownDate());
             getServicePatronageData().getServicesType().add(new Object[]{
-                getServicePatronageData().getDropDown()
-//
-//                getServicePatronageData().setServicesType(null);
-            });
+                getServicePatronageData().getDropDown(),
+                getServicePatronageData().getServiceDropdownDate()
 
-//        } catch (Exception e) {
-//            System.out.println("servicePatronageController.addServiceDateToTable() - " + e);
-//        }
+            });
         }
+        System.out.println("Null dito");
+//        getServicePatronageData().setServicesType(null);
+        getServicePatronageData().setServiceDropdownDate(null);
+        getServicePatronageData().setDropDown(null);
     }
 }
