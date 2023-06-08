@@ -6,11 +6,15 @@
 package bean;
 
 import java.io.Serializable;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import model.ServicePatronageNonMember;
 
 /**
  *
@@ -35,6 +39,11 @@ public class ServicePatronageController implements Serializable {
     private NavigationController navigationController;
     @ManagedProperty(value = "#{customEntityManagerFactory}")
     private CustomEntityManagerFactory customEntityManagerFactory;
+    @ManagedProperty(value = "#{dbConnection}")
+    private DbConnection dbConnection;
+    @ManagedProperty(value = "#{portalData}")
+    private PortalData portalData;
+
 
     /*
      * getter setter
@@ -70,10 +79,58 @@ public class ServicePatronageController implements Serializable {
         this.customEntityManagerFactory = customEntityManagerFactory;
     }
 
+    public DbConnection getDbConnection() {
+        return dbConnection == null ? dbConnection = new DbConnection() : dbConnection;
+    }
+
+    public void setDbConnection(DbConnection dbConnection) {
+        this.dbConnection = dbConnection;
+    }
+
+    public PortalData getPortalData() {
+        return portalData;
+    }
+
+    public void setPortalData(PortalData portalData) {
+        this.portalData = portalData;
+    }
+
 
     /*
      * methods
      */
+    
+
+    public void addNewNonMemberData() throws SQLException, ClassNotFoundException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        getDbConnection().setDbUserName(String.valueOf(getPortalData().getLiferayFacesContext().getUser().getUserId()));
+        if ((getServicePatronageData().getNonMemberBirthdate() == null) || (getServicePatronageData().getNonMemberLastName() == null) || (getServicePatronageData().getNonMemberFirstName() == null)) {
+            System.out.println("EmptyInfo");
+
+        } else {
+            try {
+                System.out.println("birthdate: " + getServicePatronageData().getNonMemberBirthdate());
+                System.out.println("lastName: " + getServicePatronageData().getNonMemberLastName());
+                System.out.println("firstName: " + getServicePatronageData().getNonMemberFirstName());
+                getDbConnection().lportalMemOrgConnection = getDbConnection().connectToLportalMemOrg();
+                getDbConnection().callableStatement = getDbConnection().lportalMemOrgConnection.prepareCall("{ ? = call add_non_member_service_patronage("
+                        + "'" + getServicePatronageData().getNonMemberLastName() + "',"
+                        + "'" + getServicePatronageData().getNonMemberFirstName() + "',"
+                        + "'" + getServicePatronageData().getNonMemberBirthdate() + "')}");
+                getDbConnection().callableStatement.registerOutParameter(1, Types.BOOLEAN);
+                getDbConnection().callableStatement.execute();
+
+            } catch (Exception e) {
+                System.out.println("addnewNonMemberData - " + e);
+            } finally {
+                System.out.println("final");
+                getDbConnection().callableStatement.close();
+                getDbConnection().lportalMemOrgConnection.close();
+            }
+        }
+
+    }
+
     public void loadPage(String page) {
 
         getNavigationController().navigateTo(page);
@@ -107,4 +164,5 @@ public class ServicePatronageController implements Serializable {
         getServicePatronageData().setServiceDropdownDate(null);
         getServicePatronageData().setDropDown(null);
     }
+
 }
