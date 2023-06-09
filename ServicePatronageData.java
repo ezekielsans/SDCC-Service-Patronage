@@ -257,9 +257,9 @@ public class ServicePatronageData implements Serializable {
         setDropDown(null);
         setAddNewGroup(null);
         setServicesPatronageNonMember(null);
-        setNonMemberBirthdate(null);
-        setNonMemberFirstName(null);
-        setNonMemberLastName(null);
+        setNonMemberBirthdateInput(null);
+        setNonMemberFirstNameInput(null);
+        setNonMemberLastNameInput(null);
     }
 
     public void tabCompleteServicePatronageDb() {
