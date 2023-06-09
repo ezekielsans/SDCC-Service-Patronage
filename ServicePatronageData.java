@@ -13,6 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import model.MyServices;
+import model.ServicePatronageNonMember;
 import model.ServicePatronageView;
 
 /**
@@ -37,16 +38,27 @@ public class ServicePatronageData implements Serializable {
     private List<ServicePatronageView> servicePatronageView;
     private List<MyServices> myServices;
     private List<Object[]> servicesType;
-    private Integer index;
+    private List<ServicePatronageNonMember> servicesPatronageNonMember;
+
+    private Date birthdate;
+    private Date serviceDropdownDate;
+    private Date nonMemberBirthdate;
+    private Date nonMemberBirthdateInput;
+
     private String scAcctno;
     private String lastName;
     private String firstName;
     private String addNewGroup;
     private String orgName;
-    private Date birthdate;
-    private Date serviceDropdownDate;
+
+    private String nonMemberLastName;
+    private String nonMemberFirstName;
+    private String nonMemberLastNameInput;
+    private String nonMemberFirstNameInput;
+
     private Integer type;
     private Integer dropDown;
+    private Integer index;
 
 
     /*
@@ -55,10 +67,10 @@ public class ServicePatronageData implements Serializable {
     public CustomEntityManagerFactory getCustomEntityManagerFactory() {
         return customEntityManagerFactory == null ? customEntityManagerFactory = new CustomEntityManagerFactory() : customEntityManagerFactory;
     }
-//
-//    public void setCustomEntityManagerFactory(CustomEntityManagerFactory customEntityManagerFactory) {
-//        this.customEntityManagerFactory = customEntityManagerFactory;
-//    }
+
+    public void setCustomEntityManagerFactory(CustomEntityManagerFactory customEntityManagerFactory) {
+        this.customEntityManagerFactory = customEntityManagerFactory;
+    }
 
     public List<ServicePatronageView> getServicePatronageView() {
         return servicePatronageView == null ? servicePatronageView = new ArrayList<>() : servicePatronageView;
@@ -66,6 +78,30 @@ public class ServicePatronageData implements Serializable {
 
     public void setServicePatronageView(List<ServicePatronageView> servicePatronageView) {
         this.servicePatronageView = servicePatronageView;
+    }
+
+    public List<Object[]> getServicesType() {
+        return servicesType == null ? servicesType = new ArrayList<>() : servicesType;
+    }
+
+    public void setServicesType(List<Object[]> servicesType) {
+        this.servicesType = servicesType;
+    }
+
+    public List<MyServices> getMyServices() {
+        return myServices == null ? myServices = new ArrayList<>() : myServices;
+    }
+
+    public void setMyServices(List<MyServices> myServices) {
+        this.myServices = myServices;
+    }
+
+    public List<ServicePatronageNonMember> getServicesPatronageNonMember() {
+        return servicesPatronageNonMember == null ? servicesPatronageNonMember = new ArrayList<>() : servicesPatronageNonMember;
+    }
+
+    public void setServicesPatronageNonMember(List<ServicePatronageNonMember> servicesPatronageNonMember) {
+        this.servicesPatronageNonMember = servicesPatronageNonMember;
     }
 
     public Integer getIndex() {
@@ -124,28 +160,12 @@ public class ServicePatronageData implements Serializable {
         this.type = type;
     }
 
-    public List<MyServices> getMyServices() {
-        return myServices == null ? myServices = new ArrayList<>() : myServices;
-    }
-
-    public void setMyServices(List<MyServices> myServices) {
-        this.myServices = myServices;
-    }
-
     public Integer getDropDown() {
         return dropDown;
     }
 
     public void setDropDown(Integer dropDown) {
         this.dropDown = dropDown;
-    }
-
-    public List<Object[]> getServicesType() {
-        return servicesType == null ? servicesType = new ArrayList<>() : servicesType;
-    }
-
-    public void setServicesType(List<Object[]> servicesType) {
-        this.servicesType = servicesType;
     }
 
     public Date getServiceDropdownDate() {
@@ -163,10 +183,59 @@ public class ServicePatronageData implements Serializable {
     public void setAddNewGroup(String addNewGroup) {
         this.addNewGroup = addNewGroup;
     }
+
+    public Date getNonMemberBirthdate() {
+        return nonMemberBirthdate;
+    }
+
+    public void setNonMemberBirthdate(Date nonMemberBirthdate) {
+        this.nonMemberBirthdate = nonMemberBirthdate;
+    }
+
+    public String getNonMemberLastName() {
+        return nonMemberLastName;
+    }
+
+    public void setNonMemberLastName(String nonMemberLastName) {
+        this.nonMemberLastName = nonMemberLastName;
+    }
+
+    public String getNonMemberFirstName() {
+        return nonMemberFirstName;
+    }
+
+    public void setNonMemberFirstName(String nonMemberFirstName) {
+        this.nonMemberFirstName = nonMemberFirstName;
+    }
+
+    public String getNonMemberLastNameInput() {
+        return nonMemberLastNameInput;
+    }
+
+    public void setNonMemberLastNameInput(String nonMemberLastNameInput) {
+        this.nonMemberLastNameInput = nonMemberLastNameInput;
+    }
+
+    public String getNonMemberFirstNameInput() {
+        return nonMemberFirstNameInput;
+    }
+
+    public void setNonMemberFirstNameInput(String nonMemberFirstNameInput) {
+        this.nonMemberFirstNameInput = nonMemberFirstNameInput;
+    }
+
+    public Date getNonMemberBirthdateInput() {
+        return nonMemberBirthdateInput;
+    }
+
+    public void setNonMemberBirthdateInput(Date nonMemberBirthdateInput) {
+        this.nonMemberBirthdateInput = nonMemberBirthdateInput;
+    }
+
+
     /*
      * methods
      */
-
     public void tabConvert() {
 
     }
@@ -179,56 +248,116 @@ public class ServicePatronageData implements Serializable {
 
     public void beanclear() {
         setServicePatronageView(null);
-        setIndex(0);
         setLastName(null);
         setFirstName(null);
         setScAcctno(null);
         setBirthdate(null);
-
+        setType(null);
+        setServicesType(null);
+        setDropDown(null);
+        setAddNewGroup(null);
+        setServicesPatronageNonMember(null);
+        setNonMemberBirthdate(null);
+        setNonMemberFirstName(null);
+        setNonMemberLastName(null);
     }
 
     public void tabCompleteServicePatronageDb() {
+
         String query;
 
         setServicePatronageView(null);
-
-        System.out.println("WAWAW");
 
         if (getScAcctno() != null
                 || getLastName() != null
                 || getFirstName() != null
                 || getBirthdate() != null) {
 
-            try {
-                query = "SELECT x"
-                        + "FROM ServicePatronageView x "
-                        + "WHERE x.ScAcctno = x.ScAcctno";
-                if (getScAcctno() != null) {
-                    query += "AND x.scAcctno = '" + getScAcctno() + "'";
-                }
-                if (getLastName() != null) {
-                    query += "AND x.lastName = '" + getLastName() + "'";
-                }
-                if (getFirstName() != null) {
-                    query += "AND x.firstName = '" + getFirstName() + "'";
-                }
-                if (getBirthdate() != null) {
-                    query += "AND x.birthDate = '" + getBirthdate() + "'";
-                }
+            System.out.println("out ito");
 
-                query += "ORDER BY x.scAcctno";
-                setServicePatronageView(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(query).getResultList());
-            } catch (Exception e) {
-
-                System.out.println("ServicePatronageData" + e);
-                setLastName(null);
-                setScAcctno(null);
-                setFirstName(null);
-                setBirthdate(null);
+//            try {
+            query = "SELECT x "
+                    + "FROM ServicePatronageView x "
+                    + "WHERE x.scAcctno = x.scAcctno ";
+            if (getScAcctno() != null) {
+                query += "AND x.scAcctno = '" + getScAcctno() + "' ";
             }
+            if (getLastName() != null) {
+                query += "AND x.lastName = '" + getLastName() + "' ";
+            }
+            if (getFirstName() != null) {
+                query += "AND x.firstName = '" + getFirstName() + "' ";
+            }
+            if (getBirthdate() != null) {
+                query += "AND x.birthDate = '" + getBirthdate() + "' ";
+            }
+
+            query += "ORDER BY x.scAcctno";
+
+            System.out.println("magseset na");
+
+            System.out.println("query: " + query);
+
+            setServicePatronageView(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(query).getResultList());
+
+//            } catch (Exception e) {
+            System.out.println("ServicePatronageData");
+            setLastName(null);
+            setScAcctno(null);
+            setFirstName(null);
+            setBirthdate(null);
+//            }
             setIndex(0);
+            System.out.println("result " + getScAcctno());
 
         }
+
+        System.out.println("out ito two");
+    }
+
+    public void fillInputBoxForServicePatronageNonMember() {
+
+        String query;
+
+        setServicesPatronageNonMember(null);
+
+        if (getNonMemberLastName() != null
+                || getNonMemberFirstName() != null
+                || getNonMemberBirthdate() != null) {
+
+            System.out.println("out ito");
+
+//            try {
+            query = "SELECT x "
+                    + "FROM ServicePatronageNonMember x ";
+            if (getNonMemberLastName() != null) {
+                query += "AND x.lastName = '" + getNonMemberLastName() + "' ";
+            }
+            if (getNonMemberLastName() != null) {
+                query += "AND x.firstName = '" + getNonMemberFirstName() + "' ";
+            }
+            if (getNonMemberBirthdate() != null) {
+                query += "AND x.birthDate = '" + getNonMemberBirthdate() + "' ";
+            }
+
+            query += "ORDER BY x.acctno ";
+
+            System.out.println("magseset na");
+
+            System.out.println("query: " + query);
+            setServicesPatronageNonMember(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(query).getResultList());
+
+//            } catch (Exception e) {
+            System.out.println("ServicePatronageData");
+            setNonMemberLastName(null);
+            setNonMemberFirstName(null);
+            setNonMemberBirthdate(null);
+//            }
+            setIndex(0);
+            System.out.println("result " + getNonMemberLastName());
+
+        }
+        System.out.println("out ito two");
     }
 
     public void select() {
@@ -236,5 +365,12 @@ public class ServicePatronageData implements Serializable {
         setMyServices(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager()
                 .createQuery("SELECT x FROM MyServices x ORDER BY x.serviceId").getResultList());
         System.out.println("Working");
+
+    }
+
+    public void clearNonMember() {
+        setNonMemberBirthdate(null);
+        setNonMemberFirstName(null);
+        setNonMemberLastName(null);
     }
 }
