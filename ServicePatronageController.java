@@ -29,12 +29,12 @@ public class ServicePatronageController implements Serializable {
      */
     public ServicePatronageController() {
     }
+
     /*
      * properties
      */
     @ManagedProperty(value = "#{servicePatronageData}")
     private ServicePatronageData servicePatronageData;
-
     @ManagedProperty(value = "#{navigationController}")
     private NavigationController navigationController;
     @ManagedProperty(value = "#{customEntityManagerFactory}")
@@ -99,19 +99,13 @@ public class ServicePatronageController implements Serializable {
     /*
      * methods
      */
-    
-
     public void addNewNonMemberData() throws SQLException, ClassNotFoundException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         getDbConnection().setDbUserName(String.valueOf(getPortalData().getLiferayFacesContext().getUser().getUserId()));
-        if ((getServicePatronageData().getNonMemberBirthdate() == null) || (getServicePatronageData().getNonMemberLastName() == null) || (getServicePatronageData().getNonMemberFirstName() == null)) {
-            System.out.println("EmptyInfo");
+        if (nonMemberValidation()) {
 
-        } else {
             try {
-                System.out.println("birthdate: " + getServicePatronageData().getNonMemberBirthdate());
-                System.out.println("lastName: " + getServicePatronageData().getNonMemberLastName());
-                System.out.println("firstName: " + getServicePatronageData().getNonMemberFirstName());
+
                 getDbConnection().lportalMemOrgConnection = getDbConnection().connectToLportalMemOrg();
                 getDbConnection().callableStatement = getDbConnection().lportalMemOrgConnection.prepareCall("{ ? = call add_non_member_service_patronage("
                         + "'" + getServicePatronageData().getNonMemberLastName() + "',"
@@ -122,24 +116,38 @@ public class ServicePatronageController implements Serializable {
 
             } catch (Exception e) {
                 System.out.println("addnewNonMemberData - " + e);
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error on database function. ", ""));
             } finally {
-                System.out.println("final");
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Non Member Added. ", ""));
                 getDbConnection().callableStatement.close();
                 getDbConnection().lportalMemOrgConnection.close();
-            }
-        }
 
+            }
+
+            clearTextField();
+        }
     }
 
-    public void loadPage(String page) {
+    public Boolean nonMemberValidation() {
 
-        getNavigationController().navigateTo(page);
+        try {
 
-        getServicePatronageData().setMyServices(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager()
-                .createQuery("SELECT x FROM MyServices x").getResultList());
+            FacesContext facesContext = FacesContext.getCurrentInstance();
 
-        if (getServicePatronageData().getOrgName() != null) {
-            getServicePatronageData().setType(2);
+            if (getServicePatronageData().getNonMemberBirthdate() == null
+                    || getServicePatronageData().getNonMemberLastName() == null
+                    || getServicePatronageData().getNonMemberFirstName() == null
+                    || getServicePatronageData().getNonMemberBirthdate().equals("")
+                    || getServicePatronageData().getNonMemberLastName().equals("")
+                    || getServicePatronageData().getNonMemberFirstName().equals("")) {
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please input a value in the specific fields.", ""));
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+
         }
 
     }
@@ -163,6 +171,24 @@ public class ServicePatronageController implements Serializable {
 //        getServicePatronageData().setServicesType(null);
         getServicePatronageData().setServiceDropdownDate(null);
         getServicePatronageData().setDropDown(null);
+
+    }
+
+    public void clearTextField() {
+        getServicePatronageData().setNonMemberLastName(null);
+        getServicePatronageData().setNonMemberFirstName(null);
+        getServicePatronageData().setNonMemberBirthdate(null);
+    }
+
+    public void loadPage(String page) {
+
+        getNavigationController().navigateTo(page);
+        getServicePatronageData().setMyServices(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager()
+                .createQuery("SELECT x FROM MyServices x").getResultList());
+        if (getServicePatronageData().getOrgName() != null) {
+            getServicePatronageData().setType(2);
+        }
+
     }
 
 }
