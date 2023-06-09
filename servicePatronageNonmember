@@ -14,58 +14,34 @@
         <!--<composite:attribute name="navigateToString"/>-->
     </composite:interface>
     <composite:implementation>
-        <p:panel id="nonMemberTabView"
+        <p:panel id="selectNonMemberTabView"
                  style="border-color: white">
             <div class="main ui-grid-row">
                 <div class="section ui-grid-col-6">
-                    <div class="group ui-grid-row">
-                        <div class="title ui-grid-col-2">
-                            <p:outputLabel value="Account no.:"/>
-                        </div>
-                        <p:autoComplete id="acctNo"
-                                        value="#{servicePatronageData.scAcctno}"
-                                        completeMethod="#{servicePatronageAutoCompleteForm.findByScAcctno}"
-                                        placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].scAcctno}"
-                                        forceSelection="true"
-                                        queryDelay="500"
-                                        scrollHeight="200"
-                                        maxResults="100"
-                                        inputStyle="width:200px"
-                                        emptyMessage="no records found."
-                                        onclick="this.select()">  
-                            <p:ajax  process="@this"
-                                     event="itemSelect"
-                                     update=":#{p:component('lastName')},:#{p:component('firstName')},:#{p:component('birthDate')}"
-                                     listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
-                            <p:ajax process="@this"
-                                    event="keyup"
-                                    update=":#{p:component('lastName')},:#{p:component('firstName')},:#{p:component('birthDate')}"
-                                    listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/> 
-                        </p:autoComplete>
-                    </div>
+
                     <div class="group ui-grid-row">
                         <div class="title ui-grid-col-2">
                             <p:outputLabel value="Last name:"/>
                         </div>
                         <div class="textbox ui-grid-col-2">
-                            <p:autoComplete id="lastName"
-                                            value="#{servicePatronageData.lastName}"
-                                            completeMethod="#{servicePatronageAutoCompleteForm.findByLastName}"
-                                            placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].lastName}"
+                            <p:autoComplete id="nonMemLastName"
+                                            value="#{servicePatronageData.nonMemberLastName}"
+                                            completeMethod="#{servicePatronageAutoCompleteForm.findNonMemberByLastName}"
+                                            placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].nonMemberLastName}"
+                                            emptyMessage="no records found."
                                             queryDelay="500"
                                             scrollHeight="200"
                                             maxResults="100"
                                             inputStyle="width:200px"
-                                            emptyMessage="no records found."
                                             onclick="this.select()">
                                 <p:ajax process="@this"
                                         event="itemSelect"
-                                        update=":#{p:component('acctNo')},:#{p:component('firstName')},:#{p:component('birthDate')}"
-                                        listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
+                                        update=":#{p:component('nonMemFirstName')},:#{p:component('birthDate')}"
+                                        listener="#{servicePatronageData.fillInputBoxForServicePatronageNonMember()}"/>
                                 <p:ajax process="@this"
                                         event="keyup"
-                                        update=":#{p:component('acctNo')},:#{p:component('firstName')},:#{p:component('birthDate')}"
-                                        listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
+                                        update=":#{p:component('nonMemFirstName')},:#{p:component('birthDate')}"
+                                        listener="#{servicePatronageData.fillInputBoxForServicePatronageNonMember()}"/>
                             </p:autoComplete>
 
                         </div>
@@ -74,10 +50,10 @@
                         <div class="title ui-grid-col-2">
                             <p:outputLabel value="First name:"/>
                         </div>
-                        <p:autoComplete id="firstName"
-                                        value="#{servicePatronageData.firstName}"
-                                        completeMethod="#{servicePatronageAutoCompleteForm.findByFirstName}"
-                                        placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].firstName}"
+                        <p:autoComplete id="nonMemFirstName"
+                                        value="#{servicePatronageData.nonMemberFirstName}"
+                                        completeMethod="#{servicePatronageAutoCompleteForm.findNonMemberByFirstName}"
+                                        placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].nonMemberFirstName}"
                                         queryDelay="500"
                                         scrollHeight="200"
                                         maxResults="100"
@@ -86,11 +62,11 @@
                                         onclick="this.select()">
                             <p:ajax process="@this"
                                     event="itemSelect"
-                                    update=":#{p:component('lastName')},:#{p:component('acctNo')},:#{p:component('birthDate')}"
+                                    update=":#{p:component('lastName')},:#{p:component('birthDate')}"
                                     listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
                             <p:ajax process="@this"
                                     event="keyup"
-                                    update=":#{p:component('lastName')},:#{p:component('acctNo')},:#{p:component('birthDate')}"
+                                    update=":#{p:component('lastName')},:#{p:component('birthDate')}"
                                     listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
 
                         </p:autoComplete>
@@ -101,69 +77,112 @@
                             <p:outputLabel value="Birthdate:"/>
                         </div>
                         <p:inputText id="birthDate"
-                                     value="#{servicePatronageData.servicePatronageView[servicePatronageData.index].birthdate}"
+                                     value="#{servicePatronageData.servicePatronageView[servicePatronageData.index].nonMemberBirthdate}"
                                      readonly="true">
                             <f:convertDateTime pattern="MMM dd yyyy"/>
                         </p:inputText>
 
                     </div>
-                    <br/>
-                    <div class="buttons ui-grid-row">
-                        <p:commandButton value="Select"
-                                         icon="ui-icon-check"
-                                         styleClass="ui-btn ui-shadow ui-corner-all"
-                                         style="margin-right: 7px"
-                                         actionListener="#{cc.attrs.navigatePage}"
-                                         update ="#{p:component('servicePatronageTabView')}"
-                                         >
-                        </p:commandButton> 
-                    </div>
-                    <br/>
-                    <div class="title ui-grid-row">
+                </div>
+            </div>
+        </p:panel>
 
-                        <p:outputLabel value="Add new record"/>
-                    </div>
-                    <br/>
+        <br/>
+
+
+
+        <div class="buttons ui-grid-row">
+            <p:commandButton value="Select"
+                             icon="ui-icon-check"
+                             styleClass="ui-btn ui-shadow ui-corner-all"
+                             style="margin-right: 7px"
+                             actionListener="#{cc.attrs.navigatePage}"
+                             update ="#{p:component('servicePatronageTabView')}"
+                             >
+            </p:commandButton> 
+        </div>
+
+
+
+
+
+
+
+
+        <br/>
+
+        <div class="title ui-grid-row">
+            <p:outputLabel value="Add new record"/>
+        </div>
+
+        <br/>
+
+        <p:panel id="inputNewMemberPanel"
+                 style="border-color: white">
+
+            <div class="main ui-grid-row">
+                <div class="section ui-grid-col-6">
+
                     <div class="group ui-grid-row">
-
                         <div class="title ui-grid-col-2">
-                            <p:outputLabel value="Last Name:"/>
+                            <p:outputLabel value="Last Name: *"/>
                         </div>
-                        <p:autoComplete id="lastNameSecond"
-                                        scrollHeight="100"
-                                        />
+                        <p:inputText id="lastName"
+                                     value="#{servicePatronageData.nonMemberLastNameInput}">
+                            <p:ajax  update="@this , :#{p:component('addButton')}"
+                                     process="@this"
+                                     event="change"/>
+
+                        </p:inputText>
                     </div>
                     <div class="group ui-grid-row">
-
                         <div class="title ui-grid-col-2">
-                            <p:outputLabel value="First Name:"/>
+                            <p:outputLabel value="First Name: *"/>
                         </div>
-                        <p:autoComplete id="firstNameSecond"
-                                        scrollHeight="100"
-                                        />
+                        <p:inputText id="firstNameSecond"
+                                     value="#{servicePatronageData.nonMemberFirstNameInput}">
+                            <p:ajax update="@this , :#{p:component('addButton')}"
+                                    process="@this"
+                                    event="change"/>
+
+                        </p:inputText>
                     </div>
                     <div class="group ui-grid-row">
-
                         <div class="title ui-grid-col-2">
-                            <p:outputLabel value="Birthdate:"/>
+                            <p:outputLabel value="Birthdate: *"/>
                         </div>
-                        <p:autoComplete id="birthDateSecond"
-                                        scrollHeight="100"
-                                        />
-                    </div>
-                    <div class="buttons ui-grid-row">
-                        <p:commandButton value="Add"
-                                         icon="ui-icon-plus"
-                                         styleClass="ui-btn ui-shadow ui-corner-all"
-                                         style="margin-right: 7px"
-                                         actionListener="#{cc.attrs.navigatePage}"
-                                         update ="#{p:component('servicePatronageTabView')}"
-                                         >
-                        </p:commandButton> 
+                        <p:calendar id="selectDateId"
+                                    value="#{servicePatronageData.nonMemberBirthdateInput}"
+                                    yearRange="#{1900}:#{customDate.currentDate}"
+                                    maxdate="#{customDate.currentDate}"
+                                    navigator="true"
+                                    pattern="dd MMMM yyyy"
+                                    onclick="this.select()"
+                                    readonlyInput="true">
+                            <p:ajax event="dateSelect"
+                                    update="@this , :#{p:component('addButton')}"
+                                    process="@this"/>
+                        </p:calendar>
                     </div>
                 </div>
             </div>
-
         </p:panel>
+        <div class="buttons ui-grid-row">
+            <p:commandButton 
+                id="addButton"
+                value="Add"
+                icon="ui-icon-plus"
+                styleClass="ui-btn ui-shadow ui-corner-all"
+                style="margin-right: 7px">
+
+                <p:ajax listener="#{servicePatronageController.addNewNonMemberData()}"
+                        update ="@this, :#{p:component('growl')} 
+                        ,:#{p:component('selectDateId')}
+                        ,:#{p:component('lastName')}
+                        ,:#{p:component('firstNameSecond')}"
+                        process="@this"
+                        event="click"/>
+            </p:commandButton> 
+        </div>
     </composite:implementation>
 </html>
