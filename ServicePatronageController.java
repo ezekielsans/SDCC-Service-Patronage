@@ -99,6 +99,32 @@ public class ServicePatronageController implements Serializable {
     /*
      * methods
      */
+    public void addNewGroupDataToTable() throws SQLException, ClassNotFoundException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        getDbConnection().setDbUserName(String.valueOf(getPortalData().getLiferayFacesContext().getUser().getUserId()));
+
+        if (newGroupValidation()) {
+
+            try {
+                getDbConnection().lportalMemOrgConnection = getDbConnection().connectToLportalMemOrg();
+                getDbConnection().callableStatement = getDbConnection().lportalMemOrgConnection.prepareCall("{ ? = call add_group_service_patronage ("
+                        + "'" + getServicePatronageData().getInputNewGroup() + "')}");
+                getDbConnection().callableStatement.registerOutParameter(1, Types.BOOLEAN);
+                getDbConnection().callableStatement.execute();
+
+            } catch (Exception e) {
+                System.out.println("addNewGroupDataToTable" + e);
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error on database function. ", ""));
+            } finally {
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Group Added Successfully. ", ""));
+                getDbConnection().callableStatement.close();
+                getDbConnection().lportalMemOrgConnection.close();
+
+            }
+            clearTextField();
+        }
+    }
+
     public void addNewNonMemberData() throws SQLException, ClassNotFoundException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         getDbConnection().setDbUserName(String.valueOf(getPortalData().getLiferayFacesContext().getUser().getUserId()));
@@ -108,9 +134,9 @@ public class ServicePatronageController implements Serializable {
 
                 getDbConnection().lportalMemOrgConnection = getDbConnection().connectToLportalMemOrg();
                 getDbConnection().callableStatement = getDbConnection().lportalMemOrgConnection.prepareCall("{ ? = call add_non_member_service_patronage("
-                        + "'" + getServicePatronageData().getNonMemberLastName() + "',"
-                        + "'" + getServicePatronageData().getNonMemberFirstName() + "',"
-                        + "'" + getServicePatronageData().getNonMemberBirthdate() + "')}");
+                        + "'" + getServicePatronageData().getNonMemberLastNameInput() + "',"
+                        + "'" + getServicePatronageData().getNonMemberFirstNameInput() + "',"
+                        + "'" + getServicePatronageData().getNonMemberBirthdateInput() + "')}");
                 getDbConnection().callableStatement.registerOutParameter(1, Types.BOOLEAN);
                 getDbConnection().callableStatement.execute();
 
@@ -118,7 +144,7 @@ public class ServicePatronageController implements Serializable {
                 System.out.println("addnewNonMemberData - " + e);
                 facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error on database function. ", ""));
             } finally {
-                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Non Member Added. ", ""));
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Non Member Added Successfully. ", ""));
                 getDbConnection().callableStatement.close();
                 getDbConnection().lportalMemOrgConnection.close();
 
@@ -128,18 +154,34 @@ public class ServicePatronageController implements Serializable {
         }
     }
 
+    public Boolean newGroupValidation() {
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+
+        if (getServicePatronageData().getInputNewGroup() == null
+                || getServicePatronageData().getInputNewGroup().equals("")) {
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please input a value.", ""));
+            return false;
+        } else {
+            return true;
+////       }
+        }
+
+    }
+
+    //    public void addNewGroup() throws SQLException ,ClassNotFoundException
     public Boolean nonMemberValidation() {
 
         try {
 
             FacesContext facesContext = FacesContext.getCurrentInstance();
 
-            if (getServicePatronageData().getNonMemberBirthdate() == null
-                    || getServicePatronageData().getNonMemberLastName() == null
-                    || getServicePatronageData().getNonMemberFirstName() == null
-                    || getServicePatronageData().getNonMemberBirthdate().equals("")
-                    || getServicePatronageData().getNonMemberLastName().equals("")
-                    || getServicePatronageData().getNonMemberFirstName().equals("")) {
+            if (getServicePatronageData().getNonMemberBirthdateInput() == null
+                    || getServicePatronageData().getNonMemberFirstNameInput() == null
+                    || getServicePatronageData().getNonMemberLastNameInput() == null
+                    || getServicePatronageData().getNonMemberFirstNameInput().equals("")
+                    || getServicePatronageData().getNonMemberLastNameInput().equals("")) {
+
                 facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please input a value in the specific fields.", ""));
                 return false;
             } else {
@@ -175,9 +217,10 @@ public class ServicePatronageController implements Serializable {
     }
 
     public void clearTextField() {
-        getServicePatronageData().setNonMemberLastName(null);
-        getServicePatronageData().setNonMemberFirstName(null);
-        getServicePatronageData().setNonMemberBirthdate(null);
+        getServicePatronageData().setNonMemberBirthdateInput(null);
+        getServicePatronageData().setNonMemberFirstNameInput(null);
+        getServicePatronageData().setNonMemberLastNameInput(null);
+        getServicePatronageData().setInputNewGroup(null);
     }
 
     public void loadPage(String page) {
