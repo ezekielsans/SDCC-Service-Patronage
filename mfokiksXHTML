@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:prcc="http://java.sun.com/jsf/composite/prcomponents"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <ui:composition template="/templates/layout.xhtml">
+        <ui:define id="indexContent" 
+                   name="content">
+            <f:event type="preRenderView" 
+                     listener="#{customDate.init()}"/>
+
+            <f:event type="preRenderView" 
+                     listener="#{portalData.init()}"/>
+
+            <f:event type="preRenderView" 
+                     listener="#{infoData.init()}"/>
+
+            <f:event type="preRenderView" 
+                     listener="#{autoCompleteMFData.init()}"/>
+
+            <!--
+            <f:event type="preRenderView"
+                     listener="{BEAN.init()}"/>
+            -->
+
+            <h:form id="accessMessage" 
+                    rendered="#{not portalData.showContent}">
+                <h:outputText value="#{portalData.message}"/>
+            </h:form>
+
+            <h:form id="indexForm" 
+                    rendered="#{portalData.showContent}">
+                <div class="ui-grid ui-grid-responsive">
+                    <prcc:confirmDialog/>
+
+                    <prcc:ajaxStatus/>
+
+                    <prcc:growl/>
+
+                    <!--
+                    <h:outputScript library="js"
+                                    name="FILE.js"/>
+                    -->
+
+                    <!--
+                    <h:outputStylesheet library="css" 
+                                        name="FILE.css"/>
+                    -->
+
+                    <p:panel id="indexPanel"
+                             style="border-color: white">
+
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-5">
+                                <p:outputLabel value="Last Name:"
+                                               />
+                            </div>
+                            <div class="ui-grid-col-7">
+                                <p:autoComplete id="lastName"
+                                                value="#{autoCompleteMFData.lastName}"
+                                                completeMethod="#{autoCompleteMFController.findByLastName}"
+                                                emptyMessage="No records found."
+                                                queryDelay="500" 
+                                                scrollHeight="200"
+                                                maxlength="9"
+                                                maxResults="100"
+                                                placeholder="#{autoCompleteMFData.servicePatronageNonMemberList[autoCompleteMFData.index].lastName}"
+                                                onclick="this.select()">
+                                    <p:ajax process="@this"
+                                            event="itemSelect"
+                                            listener="#{autoCompleteMFData.autoCompleteMF()}"
+                                            update="#{p:component('firstName')}, #{p:component('birthDate')}"/>
+                                    <p:ajax event="keyup"
+                                            process="@this"
+                                            listener="#{autoCompleteMFData.autoCompleteMF()}"
+                                            update="#{p:component('firstName')}, #{p:component('birthDate')}"/>
+                                </p:autoComplete>
+                            </div>
+                        </div>
+
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-5">
+                                <p:outputLabel value="First Name:"
+                                               />
+                            </div>
+                            <div class="ui-grid-col-7">
+                                <p:autoComplete id="firstName"
+                                                value="#{autoCompleteMFData.firstName}"
+                                                completeMethod="#{autoCompleteMFController.findByFirstName}"
+                                                emptyMessage="No records found."
+                                                queryDelay="500" 
+                                                scrollHeight="200"
+                                                maxlength="9"
+                                                maxResults="100"
+                                                placeholder="#{autoCompleteMFData.servicePatronageNonMemberList[autoCompleteMFData.index].firstName}"
+                                                onclick="this.select()">
+                                    <p:ajax process="@this"
+                                            event="itemSelect"
+                                            listener="#{autoCompleteMFData.autoCompleteMF()}"
+                                            update="#{p:component('lastName')}, #{p:component('birthDate')}"/>
+                                    <p:ajax event="keyup"
+                                            process="@this"
+                                            listener="#{autoCompleteMFData.autoCompleteMF()}"
+                                            update="#{p:component('lastName')}, #{p:component('birthDate')}"/>
+                                </p:autoComplete>
+                            </div>
+                        </div>
+
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-5">
+                                <p:outputLabel value="Birth Date:"/>
+                            </div>
+                            <div class="ui-grid-col-7">
+                                <p:inputText id="birthDate"
+                                             value="#{autoCompleteMFData.servicePatronageNonMemberList[autoCompleteMFData.index].birthdate}"
+                                             readonly="true">
+                                    <f:convertDateTime pattern="dd MMMM yyyy"/>
+                                </p:inputText>
+                            </div>
+                        </div>
+
+                    </p:panel>
+
+                </div>
+            </h:form>  
+        </ui:define>
+    </ui:composition>
+</html>
