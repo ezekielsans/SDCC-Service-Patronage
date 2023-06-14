@@ -1,0 +1,57 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bean;
+
+import java.io.Serializable;
+import java.util.List;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
+
+/**
+ *
+ * @author misteam
+ */
+@ManagedBean
+@RequestScoped
+public class AutoCompleteMFController implements Serializable {
+
+    /**
+     * Creates a new instance of AutoCompleteMFController
+     */
+    @ManagedProperty(value = "#{customEntityManagerFactory}")
+    private CustomEntityManagerFactory customEntityManagerFactory;
+
+    public AutoCompleteMFController() {
+    }
+
+    public CustomEntityManagerFactory getCustomEntityManagerFactory() {
+        return customEntityManagerFactory == null ? customEntityManagerFactory = new CustomEntityManagerFactory() : customEntityManagerFactory;
+    }
+
+    public void setCustomEntityManagerFactory(CustomEntityManagerFactory customEntityManagerFactory) {
+        this.customEntityManagerFactory = customEntityManagerFactory;
+    }
+
+    public List<String> findByLastName(String lastName) {
+        return getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(""
+                + "SELECT DISTINCT (x.lastName) "
+                + "FROM ServicePatronageNonMember x "
+                + "WHERE UPPER(x.lastName) LIKE UPPER(:lastName)")
+                .setParameter("lastName", lastName.concat("%"))
+                .getResultList();
+    }
+
+    public List<String> findByFirstName(String firstName) {
+        return getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(""
+                + "SELECT DISTINCT (x.firstName) "
+                + "FROM ServicePatronageNonMember x "
+                + "WHERE UPPER(x.firstName) LIKE UPPER(:firstName)")
+                .setParameter("firstName", firstName.concat("%"))
+                .getResultList();
+    }
+
+}
