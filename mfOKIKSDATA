@@ -1,0 +1,138 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bean;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import model.ServicePatronageNonMember;
+
+/**
+ *
+ * @author misteam
+ */
+@ManagedBean
+@SessionScoped
+public class AutoCompleteMFData implements Serializable {
+
+    /**
+     * Creates a new instance of AutoCompleteMFData
+     */
+    public AutoCompleteMFData() {
+    }
+
+    @ManagedProperty(value = "#{customEntityManagerFactory}")
+    private CustomEntityManagerFactory customEntityManagerFactory;
+    private List<ServicePatronageNonMember> servicePatronageNonMemberList;
+    private String lastName;
+    private String firstName;
+    private Date birthdate;
+    private Integer index;
+
+    public List<ServicePatronageNonMember> getServicePatronageNonMemberList() {
+        return servicePatronageNonMemberList == null ? servicePatronageNonMemberList = new ArrayList<>() : servicePatronageNonMemberList;
+    }
+
+    public void setServicePatronageNonMemberList(List<ServicePatronageNonMember> servicePatronageNonMemberList) {
+        this.servicePatronageNonMemberList = servicePatronageNonMemberList;
+    }
+
+    public CustomEntityManagerFactory getCustomEntityManagerFactory() {
+        return customEntityManagerFactory == null ? customEntityManagerFactory = new CustomEntityManagerFactory() : customEntityManagerFactory;
+    }
+
+    public void setCustomEntityManagerFactory(CustomEntityManagerFactory customEntityManagerFactory) {
+        this.customEntityManagerFactory = customEntityManagerFactory;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public Date getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(Date birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
+    public void init() {
+        if (FacesContext.getCurrentInstance().isPostback() == false) {
+            beanclear();
+        }
+    }
+
+    public void beanclear() {
+        setLastName(null);
+        setFirstName(null);
+        setBirthdate(null);
+        setServicePatronageNonMemberList(null);
+        setIndex(0);
+    }
+
+    public void autoCompleteMF() {
+        String query;
+
+        setServicePatronageNonMemberList(null);
+
+        if (getLastName() != null
+                || getFirstName() != null
+                || getBirthdate() != null) {
+            try {
+
+                query = "SELECT cw "
+                        + "FROM ServicePatronageNonMember cw "
+                        + "WHERE cw.lastName = cw.lastName ";
+
+                if (getLastName() != null) {
+                    query += "AND cw.lastName = '" + getLastName() + "' ";
+                }
+                if (getFirstName() != null) {
+                    query += "AND cw.firstName = '" + getFirstName() + "' ";
+                }
+                if (getBirthdate() != null) {
+                    query += "AND cw.birthdate = '" + getBirthdate() + "' ";
+                }
+
+                query += "ORDER BY cw.acctno";
+
+                System.out.println("query: " + query);
+
+                setServicePatronageNonMemberList(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(query).getResultList());
+
+            } catch (Exception e) {
+                System.out.println("autoCompleteMFData() - " + e);
+            }
+        }
+    }
+
+}
