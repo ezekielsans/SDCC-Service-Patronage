@@ -26,22 +26,22 @@
                         <div class="textbox ui-grid-col-2">
                             <p:autoComplete id="nonMemLastName"
                                             value="#{servicePatronageData.nonMemberLastName}"
-                                            completeMethod="#{servicePatronageAutoCompleteForm.findNonMemberByLastName}"
-                                            placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].nonMemberLastName}"
+                                            completeMethod="#{servicePatronageController.findNonMemberByLastName}"
                                             emptyMessage="no records found."
                                             queryDelay="500"
                                             scrollHeight="200"
+                                            maxlength="9"
                                             maxResults="100"
-                                            inputStyle="width:200px"
+                                            placeholder="#{servicePatronageData.servicesPatronageNonMemberList[servicePatronageData.index].lastName}"
                                             onclick="this.select()">
                                 <p:ajax process="@this"
                                         event="itemSelect"
-                                        update=":#{p:component('nonMemFirstName')},:#{p:component('birthDate')}"
-                                        listener="#{servicePatronageData.fillInputBoxForServicePatronageNonMember()}"/>
+                                        listener="#{servicePatronageData.completeProfile()}"
+                                        update="#{p:component('nonMemFirstName')},#{p:component('birthDate')}"/>
                                 <p:ajax process="@this"
                                         event="keyup"
-                                        update=":#{p:component('nonMemFirstName')},:#{p:component('birthDate')}"
-                                        listener="#{servicePatronageData.fillInputBoxForServicePatronageNonMember()}"/>
+                                        listener="#{servicePatronageData.completeProfile()}"
+                                        update=":#{p:component('nonMemFirstName')},:#{p:component('birthDate')}"/>
                             </p:autoComplete>
 
                         </div>
@@ -52,22 +52,22 @@
                         </div>
                         <p:autoComplete id="nonMemFirstName"
                                         value="#{servicePatronageData.nonMemberFirstName}"
-                                        completeMethod="#{servicePatronageAutoCompleteForm.findNonMemberByFirstName}"
-                                        placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].nonMemberFirstName}"
+                                        completeMethod="#{servicePatronageController.findNonMemberByFirstName}"
+                                        emptyMessage="no records found."
                                         queryDelay="500"
                                         scrollHeight="200"
+                                        maxlength="9"
                                         maxResults="100"
-                                        inputStyle="width:200px"
-                                        emptyMessage="no records found."
+                                        placeholder="#{servicePatronageData.servicesPatronageNonMemberList[servicePatronageData.index].firstName}"
                                         onclick="this.select()">
                             <p:ajax process="@this"
                                     event="itemSelect"
-                                    update=":#{p:component('lastName')},:#{p:component('birthDate')}"
-                                    listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
+                                    update=":#{p:component('nonMemLastName')},:#{p:component('birthDate')}"
+                                    listener="#{servicePatronageData.completeProfile()}"/>
                             <p:ajax process="@this"
                                     event="keyup"
-                                    update=":#{p:component('lastName')},:#{p:component('birthDate')}"
-                                    listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
+                                    update=":#{p:component('nonMemLastName')},:#{p:component('birthDate')}"
+                                    listener="#{servicePatronageData.completeProfile()}"/>
 
                         </p:autoComplete>
 
@@ -77,9 +77,9 @@
                             <p:outputLabel value="Birthdate:"/>
                         </div>
                         <p:inputText id="birthDate"
-                                     value="#{servicePatronageData.servicePatronageView[servicePatronageData.index].nonMemberBirthdate}"
+                                     value="#{servicePatronageData.servicesPatronageNonMemberList[servicePatronageData.index].birthdate}"
                                      readonly="true">
-                            <f:convertDateTime pattern="MMM dd yyyy"/>
+                            <f:convertDateTime pattern="dd MMMM yyyy"/>
                         </p:inputText>
 
                     </div>
@@ -90,24 +90,15 @@
         <br/>
 
 
-
         <div class="buttons ui-grid-row">
             <p:commandButton value="Select"
                              icon="ui-icon-check"
                              styleClass="ui-btn ui-shadow ui-corner-all"
                              style="margin-right: 7px"
                              actionListener="#{cc.attrs.navigatePage}"
-                             update ="#{p:component('servicePatronageTabView')}"
-                             >
+                             update ="#{p:component('servicePatronageTabView')}">
             </p:commandButton> 
         </div>
-
-
-
-
-
-
-
 
         <br/>
 
@@ -132,7 +123,6 @@
                             <p:ajax  update="@this , :#{p:component('addButton')}"
                                      process="@this"
                                      event="change"/>
-
                         </p:inputText>
                     </div>
                     <div class="group ui-grid-row">
@@ -144,7 +134,6 @@
                             <p:ajax update="@this , :#{p:component('addButton')}"
                                     process="@this"
                                     event="change"/>
-
                         </p:inputText>
                     </div>
                     <div class="group ui-grid-row">
@@ -174,7 +163,6 @@
                 icon="ui-icon-plus"
                 styleClass="ui-btn ui-shadow ui-corner-all"
                 style="margin-right: 7px">
-
                 <p:ajax listener="#{servicePatronageController.addNewNonMemberData()}"
                         update ="@this, :#{p:component('growl')} 
                         ,:#{p:component('selectDateId')}
