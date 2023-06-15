@@ -35,10 +35,9 @@
                         </div>
                         <p:autoComplete id="#{cc.attrs.autoMemAcctNo}"
                                         value="#{servicePatronageData.scAcctno}"
-                                        completeMethod="#{servicePatronageAutoCompleteForm.findByScAcctno}"
-                                        placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].scAcctno}"
-                                        emptyMessage="No records found."
-                                        forceSelection="true"
+                                        completeMethod="#{servicePatronageController.findByScAcctno}"
+                                        placeholder="#{servicePatronageData.servicesPatronageMemberList[servicePatronageData.index].scAcctno}"
+                                        emptyMessage="No records found."                                    
                                         queryDelay="500"
                                         scrollHeight="200"
                                         maxResults="100"
@@ -46,12 +45,12 @@
                                         onclick="this.select()">                   
                             <p:ajax  event="itemSelect"
                                      process="@this"
-                                     update=" :#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemLastName)}, :#{p:component(cc.attrs.autoMemFirstName)}, :#{p:component(cc.attrs.autoMemPanel)}"
-                                     listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
+                                     listener="#{servicePatronageData.completeMethodForServicePartronageMember()}"
+                                     update=":#{p:component(cc.attrs.autoMemBirthDate)},:#{p:component(cc.attrs.autoMemFirstName)}, :#{p:component(cc.attrs.autoMemLastName)}" />
                             <p:ajax event="keyup"
                                     process="@this"
-                                    listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"
-                                    update=" :#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemLastName)}, :#{p:component(cc.attrs.autoMemFirstName)}, :#{p:component(cc.attrs.autoMemPanel)}"/> 
+                                    listener="#{servicePatronageData.completeMethodForServicePartronageMember()}"
+                                    update=":#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemFirstName)}, :#{p:component(cc.attrs.autoMemLastName)}" />
                         </p:autoComplete>
                     </div>
 
@@ -60,25 +59,24 @@
                             <p:outputLabel value="Last name:"/>
                         </div>
                         <div class="textbox ui-grid-col-2">
-
                             <p:autoComplete id="#{cc.attrs.autoMemLastName}"
                                             value="#{servicePatronageData.lastName}"
-                                            completeMethod="#{servicePatronageAutoCompleteForm.findByLastName}"
-                                            placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].lastName}"
+                                            completeMethod="#{servicePatronageController.findByLastName}"
+                                            placeholder="#{servicePatronageData.servicesPatronageMemberList[servicePatronageData.index].lastName}"
                                             queryDelay="500"
                                             scrollHeight="200"
                                             maxResults="100"
                                             inputStyle="width:200px"
                                             emptyMessage="no records found."
                                             onclick="this.select()">
-                                <p:ajax process="@this"
-                                        event="itemSelect"
-                                        update=":#{p:component(cc.attrs.autoMemAcctNo)}, :#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemFirstName)}, :#{p:component(cc.attrs.autoMemPanel)}"
-                                        listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
-                                <p:ajax process="@this"
-                                        event="keyup"
-                                        update=":#{p:component(cc.attrs.autoMemLastName)}, :#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemAcctNo)}, :#{p:component(cc.attrs.autoMemPanel)}"
-                                        listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"/>
+                                <p:ajax  event="itemSelect"
+                                         process="@this"
+                                         listener="#{servicePatronageData.completeMethodForServicePartronageMember()}"
+                                         update=":#{p:component(cc.attrs.autoMemAcctNo)}, :#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemFirstName)}" />
+                                <p:ajax  event="keyup"
+                                         process="@this"
+                                         listener="#{servicePatronageData.completeMethodForServicePartronageMember}"
+                                         update=":#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemAcctNo)}, :#{p:component(cc.attrs.autoMemFirstName)}"/>
                             </p:autoComplete>
                         </div>
                     </div>
@@ -89,8 +87,8 @@
                         </div>
                         <p:autoComplete id="#{cc.attrs.autoMemFirstName}"
                                         value="#{servicePatronageData.firstName}"
-                                        completeMethod="#{servicePatronageAutoCompleteForm.findByFirstName}"
-                                        placeholder="#{servicePatronageData.servicePatronageView[servicePatronageData.index].firstName}"
+                                        completeMethod="#{servicePatronageController.findByFirstName}"
+                                        placeholder="#{servicePatronageData.servicesPatronageMemberList[servicePatronageData.index].firstName}"
                                         queryDelay="500"
                                         scrollHeight="200"
                                         maxResults="100"
@@ -99,16 +97,12 @@
                                         onclick="this.select()">
                             <p:ajax process="@this"
                                     event="itemSelect"
-                                    listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"
-                                    update=":#{p:component(cc.attrs.autoMemLastName)},
-                                    :#{p:component(cc.attrs.autoMemBirthDate)}, 
-                                    :#{p:component(cc.attrs.autoMemAcctNo)}, :#{p:component(cc.attrs.autoMemPanel)}"/>
+                                    listener="#{servicePatronageData.completeMethodForServicePartronageMember()}"
+                                    update=":#{p:component(cc.attrs.autoMemAcctNo)},:#{p:component(cc.attrs.autoMemBirthDate)},:#{p:component(cc.attrs.autoMemLastName)}"/>
                             <p:ajax process="@this"
                                     event="keyup"
-                                    listener="#{servicePatronageData.tabCompleteServicePatronageDb()}"
-                                    update=":#{p:component(cc.attrs.autoMemLastName)}, 
-                                    :#{p:component(cc.attrs.autoMemBirthDate)}, 
-                                    :#{p:component(cc.attrs.autoMemAcctNo)}, :#{p:component(cc.attrs.autoMemFirstName)}, :#{p:component(cc.attrs.autoMemPanel)}"/>
+                                    listener="#{servicePatronageData.completeMethodForServicePartronageMember()}"
+                                    update=":#{p:component(cc.attrs.autoMemAcctNo)},:#{p:component(cc.attrs.autoMemLastName)},:#{p:component(cc.attrs.autoMemBirthDate)}"/>
                         </p:autoComplete>
                     </div>
                     <div class="group ui-grid-row">
@@ -116,10 +110,8 @@
                         <div class="title ui-grid-col-2">
                             <p:outputLabel value="Birthdate:"/>
                         </div>
-
-
                         <p:inputText id="#{cc.attrs.autoMemBirthDate}"
-                                     value="#{servicePatronageData.servicePatronageView[servicePatronageData.index].birthdate}"
+                                     value="#{servicePatronageData.servicesPatronageMemberList[servicePatronageData.index].birthdate}"
                                      readonly="true">
                             <f:convertDateTime pattern="MMM dd yyyy"/>
                         </p:inputText>
@@ -156,13 +148,28 @@
                                  icon="ui-icon-arrowthick-1-w"
                                  disabled="#{empty servicePatronageData.firstName and empty servicePatronageData.lastName and empty servicePatronageData.scAcctno}"
                                  styleClass="ui-btn ui-shadow ui-corner-all"
-                                 style="margin-right: 7px">
+                                 style="margin-right: 7px"
+                                 onstart="PF('statusDialogTrueWidgetVar').show()"
+                                 onsuccess="PF('statusDialogTrueWidgetVar').hide()">
+                    <p:ajax listener="#{servicePatronageData.previousButton(servicePatronageData.index)}"
+                            update=":#{p:component(cc.attrs.autoMemPanel)}, :#{p:component(cc.attrs.autoButtons)}"
+                            onstart="PF('statusDialogTrueWidgetVar').show()"
+                            onsuccess="PF('statusDialogTrueWidgetVar').hide()"/>
+
+
+
                 </p:commandButton> 
                 <p:commandButton value="Next"
                                  icon="ui-icon-arrowthick-1-e"
-                                 disabled="#{empty servicePatronageData.firstName and empty servicePatronageData.lastName and empty servicePatronageData.scAcctno}"
+                                 disabled="#{empty servicePatronageData.firstName or empty servicePatronageData.lastName or empty servicePatronageData.scAcctno}"
                                  styleClass="ui-btn ui-shadow ui-corner-all"
-                                 style="margin-right: 7px">
+                                 style="margin-right: 7px"
+                                 onstart="PF('statusDialogTrueWidgetVar').show()"
+                                 onsuccess="PF('statusDialogTrueWidgetVar').hide()">
+                    <p:ajax listener="#{servicePatronageData.nextButton(servicePatronageData.index)}"
+                            update=":#{p:component(cc.attrs.autoMemPanel)}, :#{p:component(cc.attrs.autoButtons)}"
+                            onstart="PF('statusDialogTrueWidgetVar').show()"
+                            onsuccess="PF('statusDialogTrueWidgetVar').hide()"/>
                 </p:commandButton> 
             </div>
         </p:panel>
