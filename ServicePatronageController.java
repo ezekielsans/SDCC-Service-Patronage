@@ -14,7 +14,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import model.ServicePatronageNonMember;
 
 /**
  *
@@ -24,30 +23,27 @@ import model.ServicePatronageNonMember;
 @RequestScoped
 public class ServicePatronageController implements Serializable {
 
-    /**
-     * Creates a new instance of ServicePatronageController
-     */
-    public ServicePatronageController() {
-    }
 
     /*
      * properties
      */
+    @ManagedProperty(value = "#{customEntityManagerFactory}")
+    private CustomEntityManagerFactory customEntityManagerFactory;
     @ManagedProperty(value = "#{servicePatronageData}")
     private ServicePatronageData servicePatronageData;
     @ManagedProperty(value = "#{navigationController}")
     private NavigationController navigationController;
-    @ManagedProperty(value = "#{customEntityManagerFactory}")
-    private CustomEntityManagerFactory customEntityManagerFactory;
     @ManagedProperty(value = "#{dbConnection}")
     private DbConnection dbConnection;
     @ManagedProperty(value = "#{portalData}")
     private PortalData portalData;
 
-
     /*
-     * getter setter
+     * Creates a new instance of ServicePatronageController
      */
+    public ServicePatronageController() {
+    }
+
 //    public NavigationController getNavigationController() {
 //        return navigationController == null ? navigationController = new NavigationController() :  navigationController;
 //    }
@@ -55,6 +51,9 @@ public class ServicePatronageController implements Serializable {
 //    public void setNavigationController(NavigationController navigationController) {
 //        this.navigationController = navigationController;
 //    }
+    /*
+     * getter setter
+     */
     public ServicePatronageData getServicePatronageData() {
         return servicePatronageData == null ? servicePatronageData = new ServicePatronageData() : servicePatronageData;
     }
@@ -72,7 +71,7 @@ public class ServicePatronageController implements Serializable {
     }
 
     public CustomEntityManagerFactory getCustomEntityManagerFactory() {
-        return customEntityManagerFactory;
+        return customEntityManagerFactory == null ? customEntityManagerFactory = new CustomEntityManagerFactory() : customEntityManagerFactory;
     }
 
     public void setCustomEntityManagerFactory(CustomEntityManagerFactory customEntityManagerFactory) {
@@ -88,17 +87,86 @@ public class ServicePatronageController implements Serializable {
     }
 
     public PortalData getPortalData() {
-        return portalData;
+        return portalData == null ? portalData = new PortalData() : portalData;
     }
 
     public void setPortalData(PortalData portalData) {
         this.portalData = portalData;
     }
 
-
     /*
      * methods
      */
+    //for member
+    public List<String> findByScAcctno(String scAcctno) {
+        return getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(""
+                + "SELECT DISTINCT (x.scAcctno) "
+                + "FROM ServicePatronageView x "
+                + "WHERE x.scAcctno LIKE :scAcctno")
+                .setParameter("scAcctno", scAcctno.concat("%"))
+                .getResultList();
+    }
+
+    public List<String> findByLastName(String lastName) {
+        return getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(""
+                + "SELECT DISTINCT (x.lastName) "
+                + "FROM ServicePatronageView x "
+                + "WHERE UPPER(x.lastName) LIKE UPPER(:lastName) ")
+                .setParameter("lastName", lastName.concat("%"))
+                .getResultList();
+    }
+
+    public List<String> findByFirstName(String firstName) {
+        return getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(""
+                + "SELECT DISTINCT (x.firstName) "
+                + "FROM ServicePatronageView x "
+                + "WHERE UPPER(x.firstName) LIKE UPPER(:firstName) ")
+                .setParameter("firstName", firstName.concat("%")).getResultList();
+
+    }
+
+    public List<String> findByGroupOrg(String orgName) {
+        return getCustomEntityManagerFactory().getFinancialDbEntityManagerFactory().createEntityManager().createQuery(""
+                + "SELECT DISTINCT orgsupprofile.orgName "
+                + "FROM CoopFinOrgSupProfile orgsupprofile "
+                + "WHERE UPPER(orgsupprofile.orgName) LIKE UPPER(:orgName) ")
+                .setParameter("orgName", orgName.concat("%")).getResultList();
+
+    }
+
+    //for group
+    public List<String> findAddedGroup(String addedGroup) {
+        return getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(""
+                + "SELECT DISTINCT (x.groupName) "
+                + "FROM ServicePatronageGroup x "
+                + "WHERE UPPER (x.groupName) LIKE UPPER(:groupName) ")
+                .setParameter("groupName", addedGroup.concat("%")).getResultList();
+
+    }
+
+//    for non-member
+    public List<String> findNonMemberByLastName(String nonMemberLastName) {
+
+        return getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(""
+                + "SELECT DISTINCT (x.lastName) "
+                + "FROM ServicePatronageNonMember x "
+                + "WHERE UPPER (x.lastName) LIKE UPPER(:lastName) ")
+                .setParameter("lastName", nonMemberLastName.concat("%"))
+                .getResultList();
+
+    }
+
+    public List<String> findNonMemberByFirstName(String nonMemberFirstName) {
+
+        return getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(""
+                + "SELECT DISTINCT (x.firstName) "
+                + "FROM ServicePatronageNonMember x "
+                + "WHERE UPPER (x.firstName) LIKE UPPER(:firstName) ")
+                .setParameter("firstName", nonMemberFirstName.concat("%"))
+                .getResultList();
+
+    }
+
     public void addNewGroupDataToTable() throws SQLException, ClassNotFoundException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         getDbConnection().setDbUserName(String.valueOf(getPortalData().getLiferayFacesContext().getUser().getUserId()));
@@ -164,7 +232,7 @@ public class ServicePatronageController implements Serializable {
             return false;
         } else {
             return true;
-////       }
+
         }
 
     }
