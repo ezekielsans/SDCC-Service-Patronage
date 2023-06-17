@@ -16,6 +16,7 @@ import javax.faces.context.FacesContext;
 import model.MyServices;
 import model.ServicePatronageNonMember;
 import model.ServicePatronageView;
+import model.MyOffices;
 
 /**
  *
@@ -38,10 +39,11 @@ public class ServicePatronageData implements Serializable {
     private CustomEntityManagerFactory customEntityManagerFactory;
 
     private List<ServicePatronageView> servicesPatronageMemberList;
-
+    private List<MyOffices> myOffices;
     private List<MyServices> myServices;
     private List<Object[]> servicesType;
     private List<ServicePatronageNonMember> servicesPatronageNonMemberList;
+
     private Date birthdate;
     private Date serviceDropdownDate;
     private Date nonMemberBirthdate;
@@ -65,6 +67,7 @@ public class ServicePatronageData implements Serializable {
     private Integer dropDown;
     private Integer indexNextPrev;
     private Integer index;
+    private Integer officeDropdown;
     /*
      * getter setter
      */
@@ -99,6 +102,14 @@ public class ServicePatronageData implements Serializable {
 
     public void setMyServices(List<MyServices> myServices) {
         this.myServices = myServices;
+    }
+
+    public List<MyOffices> getMyOffices() {
+        return myOffices == null ? myOffices = new ArrayList<>() : myOffices;
+    }
+
+    public void setMyOffices(List<MyOffices> myOffices) {
+        this.myOffices = myOffices;
     }
 
     public List<ServicePatronageNonMember> getServicesPatronageNonMemberList() {
@@ -163,6 +174,14 @@ public class ServicePatronageData implements Serializable {
 
     public void setDropDown(Integer dropDown) {
         this.dropDown = dropDown;
+    }
+
+    public Integer getOfficeDropdown() {
+        return officeDropdown;
+    }
+
+    public void setOfficeDropdown(Integer officeDropdown) {
+        this.officeDropdown = officeDropdown;
     }
 
     public Date getServiceDropdownDate() {
@@ -266,28 +285,39 @@ public class ServicePatronageData implements Serializable {
      */
     public void init() {
         if (FacesContext.getCurrentInstance().isPostback() == false) {
+            System.out.println("init");
+            System.out.println("scacctno" + getScAcctno());
             beanclear();
+            System.out.println("scacctno1" + getScAcctno());
         }
     }
 
     public void beanclear() {
-
+        //Member
         setLastName(null);
         setFirstName(null);
         setScAcctno(null);
         setBirthdate(null);
-        setType(null);
-        setServicesType(null);
-        setDropDown(null);
-        setAddNewGroup(null);
+        setServicesPatronageMemberList(null);
+        //Non-Member
         setNonMemberBirthdateInput(null);
         setNonMemberFirstNameInput(null);
         setNonMemberLastNameInput(null);
-        setAddedGroup(null);
+
         setServicesPatronageNonMemberList(null);
         setNonMemberLastName(null);
         setNonMemberFirstName(null);
         setNonMemberBirthdate(null);
+        //Group tab
+        setAddedGroup(null);
+
+        //Mainform
+        setType(null);
+        setServicesType(null);
+        setDropDown(null);
+        setAddNewGroup(null);
+        setOfficeDropdown(null);
+
         setIndex(0);
     }
 
@@ -377,8 +407,10 @@ public class ServicePatronageData implements Serializable {
 
             } catch (Exception e) {
                 System.out.println("ServicePatronageData");
-
                 System.out.println("result " + getNonMemberLastName());
+                setNonMemberBirthdate(null);
+                setNonMemberFirstName(null);
+                setNonMemberLastName(null);
 
             }
             System.out.println("out ito two");
@@ -411,6 +443,9 @@ public class ServicePatronageData implements Serializable {
 
             } catch (Exception e) {
                 System.out.println("controllerUpdateMemberContactandAddressInformation().profileComplete() - " + e);
+                setNonMemberBirthdate(null);
+                setNonMemberFirstName(null);
+                setNonMemberLastName(null);
             }
             setIndex(0);
         }
@@ -425,9 +460,7 @@ public class ServicePatronageData implements Serializable {
     }
 
     public void clearNonMember() {
-        setNonMemberBirthdate(null);
-        setNonMemberFirstName(null);
-        setNonMemberLastName(null);
+
     }
 
     public void previousButton(Integer indexNextPrev) {
