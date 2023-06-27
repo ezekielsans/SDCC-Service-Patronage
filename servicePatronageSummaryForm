@@ -19,9 +19,6 @@
 
             <f:event type="preRenderView" 
                      listener="#{infoData.init()}"/>
-            <!--            
-                        <f:event type="preRenderView" 
-                                 listener="#2{servicePatronageData.init()}"/>-->
 
 
             <h:form id="indexForm" 
@@ -46,12 +43,10 @@
                                     </div>
                                     <div class="output ui-grid-row">
                                         <h:outputText id="acctNoTwo" 
-                                                      value="#{servicePatronageData.scAcctno}"
-                                                      />
+                                                      value="#{servicePatronageData.scAcctno}"/>
 
                                         <p:outputLabel value="-"
-                                                       rendered="#{empty servicePatronageData.scAcctno}"
-                                                       />
+                                                       rendered="#{empty servicePatronageData.scAcctno}"/>
 
                                     </div>
                                 </div>
@@ -60,7 +55,9 @@
                                         <p:outputLabel value="Name:"/>
                                     </div>
                                     <div class="output ui-grid-row">
-                                        <h:outputText  value="#{servicePatronageData.orgName}"/>
+                                        <p:outputLabel value="#{servicePatronageData.tabIndex eq 0 ? servicePatronageData.fullName : 
+                                                                servicePatronageData.tabIndex eq 1 ? servicePatronageData.addedGroup : 
+                                                                servicePatronageData.tabIndex eq 2 ? servicePatronageData.fullNameNonMember : '-'}"/>
                                     </div>
                                 </div>
                                 <div class="typeGroup ui-grid-row">
@@ -68,8 +65,9 @@
                                         <p:outputLabel value="Type:"/>
                                     </div>
                                     <div class="output ui-grid-row">
-                                        <h:outputText id="outputType" 
-                                                      value="#{dataConvert.serviceTypeConvert(servicePatronageData.type)}"/>
+                                        <h:outputText id="outputType"
+                                                      value="#{dataConvert.typeConvert(servicePatronageData.tabIndex)}">
+                                        </h:outputText>
                                     </div>
                                 </div>
 
@@ -118,8 +116,8 @@
                                         <p:outputLabel value="Amount:"/>
                                     </div>
                                     <div class="textbox ui-grid-col-2">
-                                        <p:autoComplete id="amount">
-                                        </p:autoComplete>
+                                        <p:inputText id="amount">
+                                        </p:inputText>
                                     </div>
                                 </div>
 
@@ -129,7 +127,16 @@
                                     </div>
                                     <div class="textbox ui-grid-col-2">
                                         <p:selectOneMenu id="officeDropDown"
-                                                         style="width: 200px">
+                                                         style="width: 200px"
+                                                         value="#{servicePatronageData.officeDropdown}">
+                                            <p:ajax event="change"
+                                                    process="@this"/>
+                                            <f:selectItem itemLabel=""
+                                                          itemValue=""/>
+                                            <f:selectItems var="x"
+                                                           value="#{servicePatronageData.myOffices}" 
+                                                           itemLabel="#{x.officeName}"
+                                                           itemValue="#{x.officeId}"/>
                                         </p:selectOneMenu>
 
                                     </div>
@@ -148,6 +155,7 @@
 
 
                                 </div>
+
                                 <br/>
                                 <p:dataTable id="servicePatronageFormTable"
                                              value="#{servicePatronageData.servicesType}"
@@ -175,8 +183,11 @@
                                 <br/>
                                 <div class="buttons ui-grid-row">
                                     <p:commandButton value="Exit"
+
                                                      styleClass="ui-btn ui-shadow ui-corner-all"
+
                                                      style="margin-right: 7px">
+
                                     </p:commandButton> 
                                 </div>
 
