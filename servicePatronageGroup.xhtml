@@ -24,7 +24,8 @@
                         </div>
                         <p:autoComplete id="groupName"
                                         value="#{servicePatronageData.addedGroup}"
-                                        completeMethod="#{servicePatronageAutoCompleteForm.findAddedGroup}"
+                                        completeMethod="#{servicePatronageController.findAddedGroup}"
+                                        placeholder="#{servicePatronageData.servicePatronageGroupList[servicePatronageData.index].groupName}"                                        
                                         emptyMessage="no records found."
                                         queryDelay="500"
                                         scrollHeight="200"
@@ -33,6 +34,7 @@
                             <p:ajax process="@this"
                                     event="itemSelect"
                                     update="#{p:component('selectButton')}"
+                                    
                                     />
                             <p:ajax event="keyup"
                                     process="@this"
@@ -49,7 +51,8 @@
                             styleClass="ui-btn ui-shadow ui-corner-all"
                             style="margin-right: 7px"
                             actionListener="#{cc.attrs.navigatePage}"
-                            disabled="#{empty servicePatronageData.addedGroup}">
+                            disabled="#{empty servicePatronageData.addedGroup}"
+                            update ="#{p:component('servicePatronagePanel')}">
                         </p:commandButton> 
                     </div>
 
