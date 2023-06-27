@@ -130,17 +130,18 @@
                                  icon="ui-icon-check"
                                  styleClass="ui-btn ui-shadow ui-corner-all"
                                  style="margin-right: 7px"
-                                 disabled="#{empty servicePatronageData.firstName and empty servicePatronageData.lastName and empty servicePatronageData.scAcctno}"
+                                 disabled="#{empty cc.attrs.autoMemLastName}"
                                  actionListener="#{cc.attrs.navigatePage}"
-                                 update ="#{p:component('servicePatronageTabView')}">
+                                 update ="#{p:component('servicePatronagePanel')}">
                 </p:commandButton> 
                 <p:commandButton value="Cancel"
                                  icon="ui-icon-cancel"
                                  styleClass="ui-btn ui-shadow ui-corner-all"
-                                 style="margin-right: 7px">
+                                 style="margin-right: 7px"
+                                 onclick="PF('exportDialog').hide()">
                     <p:ajax event="click"
                             listener="#{servicePatronageData.beanclear()}"
-                            update=":#{p:component(cc.attrs.autoButtons)}, :#{p:component(cc.attrs.autoMemPanel)}"
+                            update=":#{p:component(cc.attrs.autoMemAcctNo)},:#{p:component(cc.attrs.autoMemLastName)},:#{p:component(cc.attrs.autoMemBirthDate)},:#{p:component(cc.attrs.autoButtons)}, :#{p:component(cc.attrs.autoMemPanel)}"
                             onstart="PF('statusDialogTrueWidgetVar').show()"
                             onsuccess="PF('statusDialogTrueWidgetVar').hide()"/>
                 </p:commandButton> 
@@ -155,9 +156,6 @@
                             update=":#{p:component(cc.attrs.autoMemPanel)}, :#{p:component(cc.attrs.autoButtons)}"
                             onstart="PF('statusDialogTrueWidgetVar').show()"
                             onsuccess="PF('statusDialogTrueWidgetVar').hide()"/>
-
-
-
                 </p:commandButton> 
                 <p:commandButton value="Next"
                                  icon="ui-icon-arrowthick-1-e"
