@@ -7,6 +7,7 @@ package bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -17,6 +18,7 @@ import model.MyServices;
 import model.ServicePatronageNonMember;
 import model.ServicePatronageView;
 import model.MyOffices;
+import model.ServicePatronageGroup;
 
 /**
  *
@@ -43,6 +45,7 @@ public class ServicePatronageData implements Serializable {
     private List<MyServices> myServices;
     private List<Object[]> servicesType;
     private List<ServicePatronageNonMember> servicesPatronageNonMemberList;
+    private List<ServicePatronageGroup> servicePatronageGroupList;
 
     private Date birthdate;
     private Date serviceDropdownDate;
@@ -55,6 +58,9 @@ public class ServicePatronageData implements Serializable {
     private String addNewGroup;
     private String orgName;
     private String addedGroup;
+    private String fullName;
+    private String fullNameNonMember;
+    private String tabType;
 
     private String nonMemberLastName;
     private String nonMemberFirstName;
@@ -68,10 +74,11 @@ public class ServicePatronageData implements Serializable {
     private Integer indexNextPrev;
     private Integer index;
     private Integer officeDropdown;
+    private Integer tabIndex;
+
     /*
      * getter setter
      */
-
     public CustomEntityManagerFactory getCustomEntityManagerFactory() {
         return customEntityManagerFactory == null ? customEntityManagerFactory = new CustomEntityManagerFactory() : customEntityManagerFactory;
     }
@@ -118,6 +125,14 @@ public class ServicePatronageData implements Serializable {
 
     public void setServicesPatronageNonMemberList(List<ServicePatronageNonMember> servicesPatronageNonMemberList) {
         this.servicesPatronageNonMemberList = servicesPatronageNonMemberList;
+    }
+
+    public List<ServicePatronageGroup> getServicePatronageGroupList() {
+        return servicePatronageGroupList;
+    }
+
+    public void setServicePatronageGroupList(List<ServicePatronageGroup> servicePatronageGroupList) {
+        this.servicePatronageGroupList = servicePatronageGroupList;
     }
 
     public String getScAcctno() {
@@ -280,15 +295,44 @@ public class ServicePatronageData implements Serializable {
         this.index = index;
     }
 
+    public Integer getTabIndex() {
+        return tabIndex;
+    }
+
+    public void setTabIndex(Integer tabIndex) {
+        this.tabIndex = tabIndex;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getFullNameNonMember() {
+        return fullNameNonMember;
+    }
+
+    public void setFullNameNonMember(String fullNameNonMember) {
+        this.fullNameNonMember = fullNameNonMember;
+    }
+
+    public String getTabType() {
+        return tabType;
+    }
+
+    public void setTabType(String tabType) {
+        this.tabType = tabType;
+    }
+
     /*
      * methods
      */
     public void init() {
         if (FacesContext.getCurrentInstance().isPostback() == false) {
-            System.out.println("init");
-            System.out.println("scacctno" + getScAcctno());
             beanclear();
-            System.out.println("scacctno1" + getScAcctno());
         }
     }
 
@@ -298,6 +342,7 @@ public class ServicePatronageData implements Serializable {
         setFirstName(null);
         setScAcctno(null);
         setBirthdate(null);
+        setFullName(null);
         setServicesPatronageMemberList(null);
         //Non-Member
         setNonMemberBirthdateInput(null);
@@ -317,8 +362,9 @@ public class ServicePatronageData implements Serializable {
         setDropDown(null);
         setAddNewGroup(null);
         setOfficeDropdown(null);
-
+        setTabType(null);
         setIndex(0);
+
     }
 
     public void completeMethodForServicePartronageMember() {
@@ -352,7 +398,6 @@ public class ServicePatronageData implements Serializable {
 
                 query += "ORDER BY x.scAcctno";
 
-                System.out.println("query: " + query);
                 setServicesPatronageMemberList(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(query).getResultList());
 
             } catch (Exception e) {
@@ -363,7 +408,6 @@ public class ServicePatronageData implements Serializable {
                 setBirthdate(null);
             }
             setIndex(0);
-            System.out.println("result " + getScAcctno());
 
         }
 
@@ -379,8 +423,6 @@ public class ServicePatronageData implements Serializable {
         if (getNonMemberLastName() != null
                 || getNonMemberFirstName() != null
                 || getNonMemberBirthdate() != null) {
-
-            System.out.println("out ito");
 
             try {
                 query = "SELECT x "
@@ -399,21 +441,14 @@ public class ServicePatronageData implements Serializable {
 
                 query += "ORDER BY x.acctno ";
 
-                System.out.println("magseset na");
-
-                System.out.println("query: " + query);
-
                 setServicesPatronageNonMemberList(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(query).getResultList());
 
             } catch (Exception e) {
-                System.out.println("ServicePatronageData");
-                System.out.println("result " + getNonMemberLastName());
                 setNonMemberBirthdate(null);
                 setNonMemberFirstName(null);
                 setNonMemberLastName(null);
 
             }
-            System.out.println("out ito two");
         }
     }
 
@@ -456,10 +491,6 @@ public class ServicePatronageData implements Serializable {
         setMyServices(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager()
                 .createQuery("SELECT x FROM MyServices x ORDER BY x.serviceId").getResultList());
         System.out.println("Working");
-
-    }
-
-    public void clearNonMember() {
 
     }
 
