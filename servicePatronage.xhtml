@@ -9,7 +9,7 @@
       xmlns:prcc="http://java.sun.com/jsf/composite/prcomponents"
       xmlns:composite="http://java.sun.com/jsf/composite">
     <ui:composition template="/templates/layout.xhtml">
-        <ui:define id="indexContent" 
+        <ui:define id="indexServicePatronage" 
                    name="content">
             <f:event type="preRenderView" 
                      listener="#{customDate.init()}"/>
@@ -20,10 +20,9 @@
             <f:event type="preRenderView" 
                      listener="#{infoData.init()}"/>
 
-            <!--
-            <f:event type="preRenderView"
-                     listener="{BEAN.init()}"/>
-            -->
+            <f:event type="preRenderView" 
+                     listener="#{servicePatronageData.init()}"/>
+
 
             <h:form id="accessMessage" 
                     rendered="#{not portalData.showContent}">
@@ -33,39 +32,46 @@
             <h:form id="indexForm" 
                     rendered="#{portalData.showContent}">
                 <div class="ui-grid ui-grid-responsive">
+
                     <prcc:confirmDialog/>
 
                     <prcc:ajaxStatus/>
 
                     <prcc:growl/>
 
-                    <!--
-                    <h:outputScript library="js"
-                                    name="FILE.js"/>
-                    -->
-
-                    <!--
-                    <h:outputStylesheet library="css" 
-                                        name="FILE.css"/>
-                    -->
-
                     <p:panel id="servicePatronagePanel"
                              style="border-color: white">
-                        <p:tabView id="servicePatronageTabView">
+                        <p:tabView id="servicePatronageTabView"
+                                   
+                                   
+                                   
+                                   
+                                   widgetVar="servicePatronageTabViewVar"
+                                   activeIndex="#{servicePatronageData.tabIndex}">
+
+                            <p:ajax event="tabChange"
+                                    listener="#{servicePatronageController.tabChangeIndex}"
+                                    update="#{p:component('servicePatronageTabView')}"/>
                             <p:tab title="Member">
                                 <prcc:servicePatronageMember
-                                    navigatePage="#{servicePatronageController.loadPage('servicePatronageSummaryForm')}"
-                                    />
+                                    autoMemAcctNo="servicePatronageMemberAcctNo"
+                                    autoMemFirstName="servicePatronageMemberFirstName"
+                                    autoMemLastName="servicePatronageMemberLastName"
+                                    autoMemBirthDate="servicePatronageMemberBirthDate"
+                                    autoMemPanel="servicePatronageMemberPanel"
+                                    autoButtons="servicePatronageButton"
+                                    navigatePage="#{servicePatronageController.loadPage('servicePatronageSummaryForm')}"/>
                             </p:tab>
-                              <p:tab title="Group">
-                                  <prcc:servicePatronageGroup
-                                    navigatePage="#{servicePatronageController.loadPage('servicePatronageSummaryForm')}"
-                                    />
+
+                            <p:tab 
+                                id="groubTab"
+                                title="Group">
+                                <prcc:servicePatronageGroup
+                                    navigatePage="#{servicePatronageController.loadPage('servicePatronageSummaryForm')}"/>
                             </p:tab>
-                              <p:tab title="Non-Member">
-                                  <prcc:servicePatronageNonMember
-                                    navigatePage="#{servicePatronageController.loadPage('servicePatronageSummaryForm')}"
-                                    />
+                            <p:tab title="Non-Member">
+                                <prcc:servicePatronageNonMember
+                                    navigatePage="#{servicePatronageController.loadPage('servicePatronageSummaryForm')}"/>
                             </p:tab>
                         </p:tabView>
 
