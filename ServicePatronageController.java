@@ -14,6 +14,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import model.ServicePatronageNonMember;
+import org.primefaces.event.TabChangeEvent;
 
 /**
  *
@@ -44,13 +46,7 @@ public class ServicePatronageController implements Serializable {
     public ServicePatronageController() {
     }
 
-//    public NavigationController getNavigationController() {
-//        return navigationController == null ? navigationController = new NavigationController() :  navigationController;
-//    }
-//
-//    public void setNavigationController(NavigationController navigationController) {
-//        this.navigationController = navigationController;
-//    }
+
     /*
      * getter setter
      */
@@ -94,9 +90,28 @@ public class ServicePatronageController implements Serializable {
         this.portalData = portalData;
     }
 
+
     /*
      * methods
      */
+    //forChanging of tabs
+    public void tabChangeIndex(TabChangeEvent tabChangeEvent) {
+
+        getServicePatronageData().beanclear();
+        switch (tabChangeEvent.getTab().getTitle()) {
+            case "Member":
+                getServicePatronageData().setTabIndex(0);
+                break;
+            case "Group":
+                getServicePatronageData().setTabIndex(1);
+                break;
+            case "Non-Member":
+                getServicePatronageData().setTabIndex(2);
+                break;
+        }
+
+    }
+
     //for member
     public List<String> findByScAcctno(String scAcctno) {
         return getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(""
@@ -167,6 +182,7 @@ public class ServicePatronageController implements Serializable {
 
     }
 
+//add function for group 
     public void addNewGroupDataToTable() throws SQLException, ClassNotFoundException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         getDbConnection().setDbUserName(String.valueOf(getPortalData().getLiferayFacesContext().getUser().getUserId()));
@@ -193,6 +209,7 @@ public class ServicePatronageController implements Serializable {
         }
     }
 
+//for adding new non member
     public void addNewNonMemberData() throws SQLException, ClassNotFoundException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         getDbConnection().setDbUserName(String.valueOf(getPortalData().getLiferayFacesContext().getUser().getUserId()));
@@ -222,6 +239,7 @@ public class ServicePatronageController implements Serializable {
         }
     }
 
+    //validation for load page
     public Boolean newGroupValidation() {
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -277,13 +295,15 @@ public class ServicePatronageController implements Serializable {
 
             });
         }
-        System.out.println("Null dito");
+
 //        getServicePatronageData().setServicesType(null);
         getServicePatronageData().setServiceDropdownDate(null);
         getServicePatronageData().setDropDown(null);
+        getServicePatronageData().setMyOffices(null);
 
     }
 
+//clear function for non member
     public void clearTextField() {
         getServicePatronageData().setNonMemberBirthdateInput(null);
         getServicePatronageData().setNonMemberFirstNameInput(null);
@@ -292,14 +312,63 @@ public class ServicePatronageController implements Serializable {
     }
 
     public void loadPage(String page) {
+        System.out.println("grp: " + getServicePatronageData().getAddedGroup());
+        System.out.println("tabIndex " + getServicePatronageData().getTabIndex());
 
         getNavigationController().navigateTo(page);
         getServicePatronageData().setMyServices(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager()
                 .createQuery("SELECT x FROM MyServices x").getResultList());
+
+        getServicePatronageData().setMyOffices(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager()
+                .createQuery("SELECT x FROM MyOffices x").getResultList());
+
         if (getServicePatronageData().getOrgName() != null) {
-            getServicePatronageData().setType(2);
+            getServicePatronageData().setType(0);
         }
 
+        if (getServicePatronageData().getTabIndex() == 0) {
+            System.out.println("tabindex1 " + getServicePatronageData().getTabIndex());
+
+            getServicePatronageData().setLastName(getServicePatronageData().getServicesPatronageMemberList().get(0).getLastName());
+
+            getServicePatronageData().setFirstName(getServicePatronageData().getServicesPatronageMemberList().get(0).getFirstName());
+            getServicePatronageData().setFullName(getServicePatronageData().getLastName().concat(" ").concat(getServicePatronageData().getFirstName()));
+        } else if (getServicePatronageData().getTabIndex() == 1) {
+            getServicePatronageData().getAddedGroup();
+        } else if (getServicePatronageData().getTabIndex() == 2) {
+
+            getServicePatronageData().setNonMemberLastName(getServicePatronageData().getServicesPatronageNonMemberList().get(0).getLastName());
+            getServicePatronageData().setNonMemberFirstName(getServicePatronageData().getServicesPatronageNonMemberList().get(0).getFirstName());
+            getServicePatronageData().setFullNameNonMember(getServicePatronageData().getNonMemberLastName().concat(" ").concat(getServicePatronageData().getNonMemberFirstName()));
+        }
     }
 
 }
+
+//        try {
+//            System.out.println("grp1: " + getServicePatronageData().getAddedGroup());
+////            System.out.println("showName1: " + getServicePatronageData().getShowName());
+////            getServicePatronageData().setShowName(false);
+//            getServicePatronageData().setAddedGroup(getServicePatronageData().getServicePatronageGroupList().get(0).getGroupName());
+//        } catch (Exception e) {
+//            System.out.println("qwe" + e);
+//        }
+//
+//        try {
+////            getServicePatronageData().setShowName(true);
+//        getServicePatronageData().setLastName(getServicePatronageData().getServicesPatronageMemberList().get(0).getLastName());
+//        getServicePatronageData().setFirstName(getServicePatronageData().getServicesPatronageMemberList().get(0).getFirstName());
+//        } catch (Exception e) {
+//            System.out.println("asd" + e);
+//        }
+//
+//        try {
+////            getServicePatronageData().setShowName(true);
+//            getServicePatronageData().setNonMemberLastName(getServicePatronageData().getServicesPatronageNonMemberList().get(0).getLastName());
+//            getServicePatronageData().setNonMemberFirstName(getServicePatronageData().getServicesPatronageNonMemberList().get(0).getFirstName());
+//
+//        } catch (Exception e) {
+//            System.out.println("zxc" + e);
+//        }
+//
+//        System.out.println("showName2: " + getServicePatronageData());
