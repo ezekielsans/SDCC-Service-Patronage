@@ -6,6 +6,7 @@
 package bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
@@ -279,12 +280,46 @@ public class ServicePatronageController implements Serializable {
         }
 
     }
+    //     Boolean condition for Summary Form
 
-    public void addServiceDateToTable() {
+    public Boolean mainSummaryFormValidation() {
+
+        try {
+
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+
+            if (getServicePatronageData().getScAcctno() == null
+                    || getServicePatronageData().getFullName() == null
+                    //                    || getServicePatronageData().getAddedGroup() == null
+                    //                    || getServicePatronageData().getFullNameNonMember() == null
+                    || getServicePatronageData().getServiceDropdownDate() == null
+                    || getServicePatronageData().getDropDown() == null
+                    || getServicePatronageData().getInputAmount() == null
+                    || getServicePatronageData().getOfficeDropdown() == null) {
+
+                System.out.println("Full name ito: " + getServicePatronageData().getFullName());
+                System.out.println("SC ACCTNO ito: " + getServicePatronageData().getScAcctno());
+                System.out.println("SERVICE DROP DOWN DATE ito: " + getServicePatronageData().getServiceDropdownDate());
+                System.out.println("DROP DOWN: " + getServicePatronageData().getDropDown());
+                System.out.println("INPUT AMOUNT: " + getServicePatronageData().getInputAmount());
+                System.out.println("Office Drop Down: " + getServicePatronageData().getOfficeDropdown());
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please input a value in the specific fields.", ""));
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+
+        }
+
+    }
+
+    public void addServiceDateToTable() throws SQLException, ClassNotFoundException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
         //try {
-        if (getServicePatronageData().getDropDown() == null) {
+        if (getServicePatronageData().getDropDown() == null || getServicePatronageData().getServiceDropdownDate() == null) {
             facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Select Service.", ""));
         } else {
             System.out.println("dropdown: " + getServicePatronageData().getDropDown());
@@ -295,12 +330,46 @@ public class ServicePatronageController implements Serializable {
 
             });
         }
+        addMainFormDataToPatronServiceTable();
 
-//        getServicePatronageData().setServicesType(null);
         getServicePatronageData().setServiceDropdownDate(null);
         getServicePatronageData().setDropDown(null);
         getServicePatronageData().setMyOffices(null);
+        getServicePatronageData().setInputAmount(BigDecimal.ZERO);
+        getServicePatronageData().setTabIndex(Integer.SIZE);
 
+    }
+//adding data to patron_service 
+
+    public void addMainFormDataToPatronServiceTable() throws SQLException, ClassNotFoundException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        getDbConnection().setDbUserName(String.valueOf(getPortalData().getLiferayFacesContext().getUser().getUserId()));
+        if (mainSummaryFormValidation()) {
+
+            try {
+
+                getDbConnection().lportalMemOrgConnection = getDbConnection().connectToLportalMemOrg();
+                getDbConnection().callableStatement = getDbConnection().lportalMemOrgConnection.prepareCall("{ ? = call add_all_to_patron_service("
+                        + "'" + getServicePatronageData().getScAcctno() + "',"
+                        + "'" + getServicePatronageData().getServiceDropdownDate() + "',"
+                        + "'" + getServicePatronageData().getDropDown() + "',"
+                        + "'" + getServicePatronageData().getInputAmount() + "',"
+                        + "'" + getServicePatronageData().getOfficeDropdown() + "')}");
+                getDbConnection().callableStatement.registerOutParameter(1, Types.BOOLEAN);
+                getDbConnection().callableStatement.execute();
+
+            } catch (Exception e) {
+                System.out.println("addMainFormDataToPatronServiceTable - " + e);
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error on database function. ", ""));
+            } finally {
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Data Added Successfully. ", ""));
+                getDbConnection().callableStatement.close();
+                getDbConnection().lportalMemOrgConnection.close();
+
+            }
+
+            clearTextField();
+        }
     }
 
 //clear function for non member
@@ -344,31 +413,3 @@ public class ServicePatronageController implements Serializable {
     }
 
 }
-
-//        try {
-//            System.out.println("grp1: " + getServicePatronageData().getAddedGroup());
-////            System.out.println("showName1: " + getServicePatronageData().getShowName());
-////            getServicePatronageData().setShowName(false);
-//            getServicePatronageData().setAddedGroup(getServicePatronageData().getServicePatronageGroupList().get(0).getGroupName());
-//        } catch (Exception e) {
-//            System.out.println("qwe" + e);
-//        }
-//
-//        try {
-////            getServicePatronageData().setShowName(true);
-//        getServicePatronageData().setLastName(getServicePatronageData().getServicesPatronageMemberList().get(0).getLastName());
-//        getServicePatronageData().setFirstName(getServicePatronageData().getServicesPatronageMemberList().get(0).getFirstName());
-//        } catch (Exception e) {
-//            System.out.println("asd" + e);
-//        }
-//
-//        try {
-////            getServicePatronageData().setShowName(true);
-//            getServicePatronageData().setNonMemberLastName(getServicePatronageData().getServicesPatronageNonMemberList().get(0).getLastName());
-//            getServicePatronageData().setNonMemberFirstName(getServicePatronageData().getServicesPatronageNonMemberList().get(0).getFirstName());
-//
-//        } catch (Exception e) {
-//            System.out.println("zxc" + e);
-//        }
-//
-//        System.out.println("showName2: " + getServicePatronageData());
