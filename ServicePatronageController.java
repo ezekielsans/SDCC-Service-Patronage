@@ -334,9 +334,9 @@ public class ServicePatronageController implements Serializable {
 
         getServicePatronageData().setServiceDropdownDate(null);
         getServicePatronageData().setDropDown(null);
-        getServicePatronageData().setMyOffices(null);
+        getServicePatronageData().setOfficeDropdown(null);
         getServicePatronageData().setInputAmount(BigDecimal.ZERO);
-        getServicePatronageData().setTabIndex(Integer.SIZE);
+//        getServicePatronageData().setTabIndex(Integer.SIZE);
 
     }
 //adding data to patron_service 
@@ -368,8 +368,36 @@ public class ServicePatronageController implements Serializable {
 
             }
 
-            clearTextField();
         }
+    }
+
+    public void resetButton() {
+        //Member
+        getServicePatronageData().setLastName(null);
+        getServicePatronageData().setFirstName(null);
+        getServicePatronageData().setScAcctno(null);
+        getServicePatronageData().setBirthdate(null);
+
+        getServicePatronageData().setServicesPatronageMemberList(null);
+        //Non-Member
+        getServicePatronageData().setNonMemberBirthdateInput(null);
+        getServicePatronageData().setNonMemberFirstNameInput(null);
+        getServicePatronageData().setNonMemberLastNameInput(null);
+
+        getServicePatronageData().setServicesPatronageNonMemberList(null);
+        getServicePatronageData().setNonMemberLastName(null);
+        getServicePatronageData().setNonMemberFirstName(null);
+        getServicePatronageData().setNonMemberBirthdate(null);
+        //Group tab
+        getServicePatronageData().setAddedGroup(null);
+
+        //Mainform
+        getServicePatronageData().setServicesType(null);
+        getServicePatronageData().setDropDown(null);
+        getServicePatronageData().setAddNewGroup(null);
+        getServicePatronageData().setOfficeDropdown(null);
+        getServicePatronageData().setIndex(0);
+
     }
 
 //clear function for non member
