@@ -160,7 +160,7 @@ public class ServicePatronageController implements Serializable {
 
     }
 
-//    for non-member
+    //for non-member
     public List<String> findNonMemberByLastName(String nonMemberLastName) {
 
         return getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager().createQuery(""
@@ -280,7 +280,7 @@ public class ServicePatronageController implements Serializable {
         }
 
     }
-    //     Boolean condition for Summary Form
+    //Boolean condition for Summary Form
 
     public Boolean mainSummaryFormValidation() {
 
@@ -288,11 +288,7 @@ public class ServicePatronageController implements Serializable {
 
             FacesContext facesContext = FacesContext.getCurrentInstance();
 
-            if (getServicePatronageData().getScAcctno() == null
-                    || getServicePatronageData().getFullName() == null
-                    //                    || getServicePatronageData().getAddedGroup() == null
-                    //                    || getServicePatronageData().getFullNameNonMember() == null
-                    || getServicePatronageData().getServiceDropdownDate() == null
+            if (getServicePatronageData().getServiceDropdownDate() == null
                     || getServicePatronageData().getDropDown() == null
                     || getServicePatronageData().getInputAmount() == null
                     || getServicePatronageData().getOfficeDropdown() == null) {
@@ -336,7 +332,6 @@ public class ServicePatronageController implements Serializable {
         getServicePatronageData().setDropDown(null);
         getServicePatronageData().setOfficeDropdown(null);
         getServicePatronageData().setInputAmount(BigDecimal.ZERO);
-//        getServicePatronageData().setTabIndex(Integer.SIZE);
 
     }
 //adding data to patron_service 
@@ -372,31 +367,13 @@ public class ServicePatronageController implements Serializable {
     }
 
     public void resetButton() {
-        //Member
-        getServicePatronageData().setLastName(null);
-        getServicePatronageData().setFirstName(null);
-        getServicePatronageData().setScAcctno(null);
-        getServicePatronageData().setBirthdate(null);
 
-        getServicePatronageData().setServicesPatronageMemberList(null);
-        //Non-Member
-        getServicePatronageData().setNonMemberBirthdateInput(null);
-        getServicePatronageData().setNonMemberFirstNameInput(null);
-        getServicePatronageData().setNonMemberLastNameInput(null);
-
-        getServicePatronageData().setServicesPatronageNonMemberList(null);
-        getServicePatronageData().setNonMemberLastName(null);
-        getServicePatronageData().setNonMemberFirstName(null);
-        getServicePatronageData().setNonMemberBirthdate(null);
-        //Group tab
-        getServicePatronageData().setAddedGroup(null);
-
-        //Mainform
         getServicePatronageData().setServicesType(null);
         getServicePatronageData().setDropDown(null);
         getServicePatronageData().setAddNewGroup(null);
         getServicePatronageData().setOfficeDropdown(null);
         getServicePatronageData().setIndex(0);
+        getServicePatronageData().beanclear();
 
     }
 
@@ -408,10 +385,20 @@ public class ServicePatronageController implements Serializable {
         getServicePatronageData().setInputNewGroup(null);
     }
 
-    public void loadPage(String page) {
-        System.out.println("grp: " + getServicePatronageData().getAddedGroup());
-        System.out.println("tabIndex " + getServicePatronageData().getTabIndex());
+    //Clear button for Member
+    public void clearMemberField() {
+        System.out.println("asd");
+        System.out.println("SET NULL " + getServicePatronageData().getScAcctno());
+        getServicePatronageData().setScAcctno(null);
+        getServicePatronageData().setBirthdate(null);
+        getServicePatronageData().setFirstName(null);
+        getServicePatronageData().setLastName(null);
+        getServicePatronageData().setServicesPatronageMemberList(null);
 
+    }
+
+    public void loadPage(String page) {
+        System.out.println("ACCOUNT NO " + getServicePatronageData().getScAcctno());
         getNavigationController().navigateTo(page);
         getServicePatronageData().setMyServices(getCustomEntityManagerFactory().getLportalMemOrgEntityManagerFactory().createEntityManager()
                 .createQuery("SELECT x FROM MyServices x").getResultList());
@@ -425,7 +412,7 @@ public class ServicePatronageController implements Serializable {
 
         if (getServicePatronageData().getTabIndex() == 0) {
             System.out.println("tabindex1 " + getServicePatronageData().getTabIndex());
-
+            getServicePatronageData().setScAcctno(getServicePatronageData().getServicesPatronageMemberList().get(0).getScAcctno());
             getServicePatronageData().setLastName(getServicePatronageData().getServicesPatronageMemberList().get(0).getLastName());
 
             getServicePatronageData().setFirstName(getServicePatronageData().getServicesPatronageMemberList().get(0).getFirstName());
