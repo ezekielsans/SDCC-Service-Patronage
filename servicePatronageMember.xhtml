@@ -46,11 +46,11 @@
                             <p:ajax  event="itemSelect"
                                      process="@this"
                                      listener="#{servicePatronageData.completeMethodForServicePartronageMember()}"
-                                     update=":#{p:component(cc.attrs.autoMemBirthDate)},:#{p:component(cc.attrs.autoMemFirstName)}, :#{p:component(cc.attrs.autoMemLastName)}" />
+                                     update=":#{p:component(cc.attrs.autoMemBirthDate)},:#{p:component(cc.attrs.autoMemFirstName)}, :#{p:component(cc.attrs.autoMemLastName)},:#{p:component(cc.attrs.autoButtons)}" />
                             <p:ajax event="keyup"
                                     process="@this"
                                     listener="#{servicePatronageData.completeMethodForServicePartronageMember()}"
-                                    update=":#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemFirstName)}, :#{p:component(cc.attrs.autoMemLastName)}" />
+                                    update=":#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemFirstName)}, :#{p:component(cc.attrs.autoMemLastName)},:#{p:component(cc.attrs.autoButtons)}" />
                         </p:autoComplete>
                     </div>
 
@@ -72,11 +72,11 @@
                                 <p:ajax  event="itemSelect"
                                          process="@this"
                                          listener="#{servicePatronageData.completeMethodForServicePartronageMember()}"
-                                         update=":#{p:component(cc.attrs.autoMemAcctNo)}, :#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemFirstName)}" />
+                                         update=":#{p:component(cc.attrs.autoMemAcctNo)}, :#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemFirstName)},#{p:component(cc.attrs.autoButtons)}," />
                                 <p:ajax  event="keyup"
                                          process="@this"
                                          listener="#{servicePatronageData.completeMethodForServicePartronageMember}"
-                                         update=":#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemAcctNo)}, :#{p:component(cc.attrs.autoMemFirstName)}"/>
+                                         update=":#{p:component(cc.attrs.autoMemBirthDate)}, :#{p:component(cc.attrs.autoMemAcctNo)}, :#{p:component(cc.attrs.autoMemFirstName)},#{p:component(cc.attrs.autoButtons)}"/>
                             </p:autoComplete>
                         </div>
                     </div>
@@ -98,11 +98,11 @@
                             <p:ajax process="@this"
                                     event="itemSelect"
                                     listener="#{servicePatronageData.completeMethodForServicePartronageMember()}"
-                                    update=":#{p:component(cc.attrs.autoMemAcctNo)},:#{p:component(cc.attrs.autoMemBirthDate)},:#{p:component(cc.attrs.autoMemLastName)}"/>
+                                    update=":#{p:component(cc.attrs.autoMemAcctNo)},:#{p:component(cc.attrs.autoMemBirthDate)},:#{p:component(cc.attrs.autoMemLastName)},#{p:component(cc.attrs.autoButtons)}"/>
                             <p:ajax process="@this"
                                     event="keyup"
                                     listener="#{servicePatronageData.completeMethodForServicePartronageMember()}"
-                                    update=":#{p:component(cc.attrs.autoMemAcctNo)},:#{p:component(cc.attrs.autoMemLastName)},:#{p:component(cc.attrs.autoMemBirthDate)}"/>
+                                    update=":#{p:component(cc.attrs.autoMemAcctNo)},:#{p:component(cc.attrs.autoMemLastName)},:#{p:component(cc.attrs.autoMemBirthDate)},#{p:component(cc.attrs.autoButtons)}"/>
                         </p:autoComplete>
                     </div>
                     <div class="group ui-grid-row">
@@ -130,44 +130,38 @@
                                  icon="ui-icon-check"
                                  styleClass="ui-btn ui-shadow ui-corner-all"
                                  style="margin-right: 7px"
-                                 disabled="#{empty cc.attrs.autoMemLastName}"
                                  actionListener="#{cc.attrs.navigatePage}"
-                                 update ="#{p:component('servicePatronagePanel')}">
+                                 update =":#{p:component(cc.attrs.autoButtons)},:#{p:component(cc.attrs.autoMemPanel)}"
+                                 disabled="#{empty servicePatronageData.servicesPatronageMemberList}"
+                                 onstart="PF('statusDialogTrueWidgetVar').show()"
+                                 onsuccess="PF('statusDialogTrueWidgetVar').hide()">
                 </p:commandButton> 
+
                 <p:commandButton value="Cancel"
                                  icon="ui-icon-cancel"
                                  styleClass="ui-btn ui-shadow ui-corner-all"
                                  style="margin-right: 7px"
-                                 onclick="PF('exportDialog').hide()">
-                    <p:ajax event="click"
-                            listener="#{servicePatronageData.beanclear()}"
-                            update=":#{p:component(cc.attrs.autoMemAcctNo)},:#{p:component(cc.attrs.autoMemLastName)},:#{p:component(cc.attrs.autoMemBirthDate)},:#{p:component(cc.attrs.autoButtons)}, :#{p:component(cc.attrs.autoMemPanel)}"
-                            onstart="PF('statusDialogTrueWidgetVar').show()"
-                            onsuccess="PF('statusDialogTrueWidgetVar').hide()"/>
+                                 disabled="#{empty servicePatronageData.servicesPatronageMemberList}">
+                    <p:ajax      listener="#{servicePatronageController.clearMemberField()}"
+                                 update=":#{p:component('servicePatronageMemberPanel')}"/>
                 </p:commandButton> 
                 <p:commandButton value="Previous"
                                  icon="ui-icon-arrowthick-1-w"
-                                 disabled="#{empty servicePatronageData.firstName and empty servicePatronageData.lastName and empty servicePatronageData.scAcctno}"
+                                 disabled="#{empty servicePatronageData.servicesPatronageMemberList or servicePatronageData.servicesPatronageMemberList.size() eq 0 or (servicePatronageData.index eq 0)}"
                                  styleClass="ui-btn ui-shadow ui-corner-all"
-                                 style="margin-right: 7px"
-                                 onstart="PF('statusDialogTrueWidgetVar').show()"
-                                 onsuccess="PF('statusDialogTrueWidgetVar').hide()">
+                                 style="margin-right: 7px">
                     <p:ajax listener="#{servicePatronageData.previousButton(servicePatronageData.index)}"
-                            update=":#{p:component(cc.attrs.autoMemPanel)}, :#{p:component(cc.attrs.autoButtons)}"
-                            onstart="PF('statusDialogTrueWidgetVar').show()"
-                            onsuccess="PF('statusDialogTrueWidgetVar').hide()"/>
+                            update=":#{p:component('servicePatronageMemberPanel')}"/>
                 </p:commandButton> 
                 <p:commandButton value="Next"
                                  icon="ui-icon-arrowthick-1-e"
-                                 disabled="#{empty servicePatronageData.firstName or empty servicePatronageData.lastName or empty servicePatronageData.scAcctno}"
+                                 disabled="#{empty servicePatronageData.servicesPatronageMemberList or servicePatronageData.servicesPatronageMemberList.size() eq 0 or (servicePatronageData.index eq (servicePatronageData.servicesPatronageMemberList.size() -1))}"
                                  styleClass="ui-btn ui-shadow ui-corner-all"
                                  style="margin-right: 7px"
-                                 onstart="PF('statusDialogTrueWidgetVar').show()"
-                                 onsuccess="PF('statusDialogTrueWidgetVar').hide()">
+                                 >
                     <p:ajax listener="#{servicePatronageData.nextButton(servicePatronageData.index)}"
-                            update=":#{p:component(cc.attrs.autoMemPanel)}, :#{p:component(cc.attrs.autoButtons)}"
-                            onstart="PF('statusDialogTrueWidgetVar').show()"
-                            onsuccess="PF('statusDialogTrueWidgetVar').hide()"/>
+                            update=":#{p:component('servicePatronageMemberPanel')}"
+                            />
                 </p:commandButton> 
             </div>
         </p:panel>
