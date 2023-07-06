@@ -6,6 +6,7 @@
 package bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -76,9 +77,13 @@ public class ServicePatronageData implements Serializable {
     private Integer officeDropdown;
     private Integer tabIndex;
 
+    private BigDecimal inputAmount;
+
+    private Boolean inquiryDone;
     /*
      * getter setter
      */
+
     public CustomEntityManagerFactory getCustomEntityManagerFactory() {
         return customEntityManagerFactory == null ? customEntityManagerFactory = new CustomEntityManagerFactory() : customEntityManagerFactory;
     }
@@ -327,6 +332,23 @@ public class ServicePatronageData implements Serializable {
         this.tabType = tabType;
     }
 
+    public BigDecimal getInputAmount() {
+        return inputAmount;
+    }
+
+    public void setInputAmount(BigDecimal inputAmount) {
+        this.inputAmount = inputAmount;
+    }
+
+    public Boolean getInquiryDone() {
+        return inquiryDone;
+    }
+
+    public void setInquiryDone(Boolean inquiryDone) {
+        this.inquiryDone = inquiryDone;
+    }
+
+
     /*
      * methods
      */
@@ -342,7 +364,7 @@ public class ServicePatronageData implements Serializable {
         setFirstName(null);
         setScAcctno(null);
         setBirthdate(null);
-        setFullName(null);
+
         setServicesPatronageMemberList(null);
         //Non-Member
         setNonMemberBirthdateInput(null);
@@ -357,12 +379,11 @@ public class ServicePatronageData implements Serializable {
         setAddedGroup(null);
 
         //Mainform
-        setType(null);
         setServicesType(null);
         setDropDown(null);
         setAddNewGroup(null);
         setOfficeDropdown(null);
-        setTabType(null);
+        setInputAmount(BigDecimal.ZERO);
         setIndex(0);
 
     }
@@ -407,11 +428,11 @@ public class ServicePatronageData implements Serializable {
                 setFirstName(null);
                 setBirthdate(null);
             }
-            setIndex(0);
 
         }
 
-        System.out.println("out ito two");
+        setIndex(0);
+
     }
 
     public void completeMethodNonMember() {
@@ -482,8 +503,9 @@ public class ServicePatronageData implements Serializable {
                 setNonMemberFirstName(null);
                 setNonMemberLastName(null);
             }
-            setIndex(0);
         }
+
+        setIndex(0);
     }
 
     public void select() {
@@ -494,13 +516,15 @@ public class ServicePatronageData implements Serializable {
 
     }
 
-    public void previousButton(Integer indexNextPrev) {
-        setIndexNextPrev(indexNextPrev - 1);
+    public void previousButton(Integer index) {
+        System.out.println("out");
+        setIndex(index - 1);
 
     }
 
-    public void nextButton(Integer indexNextPrev) {
-        setIndexNextPrev(indexNextPrev + 1);
+    public void nextButton(Integer index) {
+        System.out.println("out 2");
+        setIndex(index + 1);
 
     }
 
