@@ -37,11 +37,11 @@
                                 <p:ajax process="@this"
                                         event="itemSelect"
                                         listener="#{servicePatronageData.completeProfile()}"
-                                        update="#{p:component('nonMemFirstName')},#{p:component('birthDate')}"/>
+                                        update=":#{p:component('nonMemFirstName')},:#{p:component('birthDate')},:#{p:component('selectBtn')}"/>
                                 <p:ajax process="@this"
                                         event="keyup"
                                         listener="#{servicePatronageData.completeProfile()}"
-                                        update=":#{p:component('nonMemFirstName')},:#{p:component('birthDate')}"/>
+                                        update=":#{p:component('nonMemFirstName')},:#{p:component('birthDate')},:#{p:component('selectBtn')}"/>
                             </p:autoComplete>
 
                         </div>
@@ -62,11 +62,11 @@
                                         onclick="this.select()">
                             <p:ajax process="@this"
                                     event="itemSelect"
-                                    update=":#{p:component('nonMemLastName')},:#{p:component('birthDate')}"
+                                    update=":#{p:component('nonMemLastName')},:#{p:component('birthDate')},:#{p:component('selectBtn')}"
                                     listener="#{servicePatronageData.completeProfile()}"/>
                             <p:ajax process="@this"
                                     event="keyup"
-                                    update=":#{p:component('nonMemLastName')},:#{p:component('birthDate')}"
+                                    update=":#{p:component('nonMemLastName')},:#{p:component('birthDate')},:#{p:component('selectBtn')}"
                                     listener="#{servicePatronageData.completeProfile()}"/>
 
                         </p:autoComplete>
@@ -91,12 +91,15 @@
 
 
         <div class="buttons ui-grid-row">
-            <p:commandButton value="Select"
-                             icon="ui-icon-check"
-                             styleClass="ui-btn ui-shadow ui-corner-all"
-                             style="margin-right: 7px"
-                             actionListener="#{cc.attrs.navigatePage}"
-                             update ="#{p:component('servicePatronageTabView')}">
+            <p:commandButton         
+                id="selectBtn"
+                value="Select"
+                icon="ui-icon-check"
+                styleClass="ui-btn ui-shadow ui-corner-all"
+                style="margin-right: 7px"
+                actionListener="#{cc.attrs.navigatePage}"
+                update ="#{p:component('growl')},:#{p:component('selectNonMemberTabView')}"
+                disabled="#{empty servicePatronageData.servicesPatronageNonMemberList}">
             </p:commandButton> 
         </div>
 
@@ -162,14 +165,16 @@
                 value="Add"
                 icon="ui-icon-plus"
                 styleClass="ui-btn ui-shadow ui-corner-all"
-                style="margin-right: 7px">
+                style="margin-right: 7px"
+                >
                 <p:ajax listener="#{servicePatronageController.addNewNonMemberData()}"
                         update ="@this, :#{p:component('growl')} 
                         ,:#{p:component('selectDateId')}
                         ,:#{p:component('lastName')}
                         ,:#{p:component('firstNameSecond')}"
                         process="@this"
-                        event="click"/>
+                        event="click"
+                        />
             </p:commandButton> 
         </div>
     </composite:implementation>
