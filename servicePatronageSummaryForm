@@ -8,6 +8,7 @@
       xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:prcc="http://java.sun.com/jsf/composite/prcomponents"
       xmlns:composite="http://java.sun.com/jsf/composite">
+
     <ui:composition template="/templates/layout.xhtml">
         <ui:define id="indexContent" 
                    name="content">
@@ -86,7 +87,7 @@
                                                     readonlyInput="true">
                                             <p:ajax event="dateSelect"
                                                     update="@this ,:#{p:component('addButton')}"
-                                                    process="@this"/>
+                                                    process="@this ,:#{p:component('addButton')}"/>
                                         </p:calendar>
                                     </div>
                                 </div>
@@ -100,7 +101,8 @@
                                                          value="#{servicePatronageData.dropDown}"
                                                          style="width: 200px">
                                             <p:ajax event="change"
-                                                    process="@this"/>
+                                                    update="@this ,:#{p:component('addButton')}"
+                                                    process="@this ,:#{p:component('addButton')}"/>
                                             <f:selectItem itemLabel=""
                                                           itemValue=""/>
                                             <f:selectItems var="x"
@@ -116,7 +118,18 @@
                                         <p:outputLabel value="Amount:"/>
                                     </div>
                                     <div class="textbox ui-grid-col-2">
-                                        <p:inputText id="amount">
+                                        <p:inputText id="amount"
+                                                     value="#{servicePatronageData.inputAmount}"
+                                                     onblur="doubleConvert(this)"
+                                                     onkeypress="return isNumberKey101109(event.keyCode, this)"
+                                                     onclick="this.select()"
+                                                     style="text-align: right;">
+                                            <p:ajax event="change"
+                                                    update="@this ,:#{p:component('addButton')}"
+                                                    process="@this ,:#{p:component('addButton')}"/>
+                                            <f:convertNumber minFractionDigits="2"
+                                                             type="number"
+                                                             pattern="#,##0.00"/>
                                         </p:inputText>
                                     </div>
                                 </div>
@@ -130,13 +143,15 @@
                                                          style="width: 200px"
                                                          value="#{servicePatronageData.officeDropdown}">
                                             <p:ajax event="change"
-                                                    process="@this"/>
+                                                    update="@this ,:#{p:component('addButton')}"
+                                                    process="@this ,:#{p:component('addButton')}"/>
                                             <f:selectItem itemLabel=""
                                                           itemValue=""/>
                                             <f:selectItems var="x"
                                                            value="#{servicePatronageData.myOffices}" 
                                                            itemLabel="#{x.officeName}"
                                                            itemValue="#{x.officeId}"/>
+
                                         </p:selectOneMenu>
 
                                     </div>
@@ -147,7 +162,9 @@
                                                      value="Add"
                                                      icon="ui-icon-plus"
                                                      styleClass="ui-btn ui-shadow ui-corner-all"
-                                                     style="margin-right: 7px">
+                                                     style="margin-right: 7px"
+                                                     disabled="#{empty servicePatronageData.dropDown and empty servicePatronage.serviceDropdownDate 
+                                                                 and empty servicePatronageData.inputAmount and empty servicePatronageData.officeDropdown}">
                                         <p:ajax listener="#{servicePatronageController.addServiceDateToTable()}"
                                                 process=":#{p:component('growl')}, :#{p:component('servicePatronageFormTable')}, :#{p:component('summaryForm')}" 
                                                 update=":#{p:component('growl')}, :#{p:component('servicePatronageFormTable')}, :#{p:component('summaryForm')}"/>
@@ -171,7 +188,7 @@
                                               style="width: 100%">
 
                                         <p:outputLabel value="#{collVar[1]}">
-                                            <f:convertDateTime pattern="dd MMMM yyyy"/>
+                                            <f:convertDateTime pattern="MMM dd yyyy"/>
                                         </p:outputLabel>
 
                                     </p:column>
@@ -182,18 +199,25 @@
                                 </p:dataTable>
                                 <br/>
                                 <div class="buttons ui-grid-row">
-                                    <p:commandButton value="Exit"
-
+                                    <p:commandButton id="exitButon"
+                                                     value="#{servicePatronageData.inquiryDone eq true? 'Done' : 'Exit'}"                                                
                                                      styleClass="ui-btn ui-shadow ui-corner-all"
-
-                                                     style="margin-right: 7px">
-
-                                    </p:commandButton> 
+                                                     style="margin-right: 7px"
+                                                     immediate="true"
+                                                     ajax="true" action="#{servicePatronageController.loadPage('servicePatronage')}">
+                                        <p:confirm header="Confirmation"
+                                                   message="Are you sure you want to exit?"
+                                                   icon="ui-icon-alert"/>
+                                        <p:ajax listener="#{servicePatronageController.resetButton()}"
+                                                update=":#{p:component('summaryForm')}"
+                                                />
+                                    </p:commandButton>
                                 </div>
-
                             </div>
                         </div>
-                    </p:panel>  
+                    </p:panel> 
+                    <h:outputScript library="js"
+                                    name="validation.js"/>
                 </div>
             </h:form>  
         </ui:define>
